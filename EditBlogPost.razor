@@ -1,0 +1,77 @@
+﻿@page "/BlogPage/EditBlog/{postId}"
+@inject BlogService BlogService
+@inject NavigationManager NavigationManager
+
+
+@using Microsoft.AspNetCore.Components;
+@using Demo_App.Services.BlogPage;
+
+<h2 class="text-2xl font-semibold">Edit Blog Post</h2>
+
+@if (updatedPost != null)
+{
+    <form class="max-w-lg mx-auto mt-8">
+        <div class="mb-4">
+            <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+            <input type="text" id="title" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" @bind="updatedPost.Title" />
+        </div>
+        <div class="mb-4">
+            <label for="content" class="block text-sm font-medium text-gray-700">Content</label>
+            <textarea id="content" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" rows="4" @bind="updatedPost.Content"></textarea>
+        </div>
+        <div class="mb-4">
+            <label for="tagging" class="block text-sm font-medium text-gray-700">Tagging</label>
+            <input type="text" id="tagging" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" @bind="updatedPost.Tagging" />
+        </div>
+        <div class="mb-4">
+            <label for="headerImage" class="block text-sm font-medium text-gray-700">Header Image URL</label>
+            <input type="text" id="headerImage" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" @bind="updatedPost.HeaderImage" />
+            <img  style="max-width: 100%" @bind="updatedPost.HeaderImage" />
+            hi
+        </div>
+        <div class="mb-4">
+            <label for="division" class="block text-sm font-medium text-gray-700">Division</label>
+            <select id="division" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" @bind="updatedPost.Division">
+                @foreach (var division in divisions)
+                {
+                    <option value="@division">@division</option>
+                }
+            </select>
+        </div>
+        <div class="mb-4">
+            <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+            <select id="category" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" @bind="updatedPost.Category">
+                @foreach (var category in categories)
+                {
+                    <option value="@category">@category</option>
+                }
+            </select>
+        </div>
+
+        <button type="button" class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" @onclick="UpdatePost">Save Changes</button>
+    </form>
+}
+
+@code {
+    [Parameter]
+    public string postId { get; set; }
+
+    [Parameter]
+    public BlogService.BlogPost updatedPost { get; set; }
+
+    private List<string> divisions = new List<string> { "Football", "Basketball", "Volleyball" }; // Sample divisions
+    private List<string> categories = new List<string> { "Goalkeeper", "Striker", "Defender" }; // Sample categories
+
+    private void UpdatePost()
+    {
+        BlogService.UpdateBlogPost(updatedPost);
+        NavigationManager.NavigateTo("/bloglist");
+    }
+
+
+    protected override void OnInitialized()
+    {
+        // Fetch the post data based on postId
+        updatedPost = BlogService.GetBlogPostById(postId);
+    }
+}

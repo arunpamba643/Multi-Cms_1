@@ -1,0 +1,76 @@
+.Edit {
+    color: white; /* Change text color to red */
+    background-color: #9895cf; /* Change background color to yellow */
+    font-weight: bold; /* Make the text bold */
+}
+
+.Add {
+    color: white; /* Change text color to red */
+    background-color: #12800099; /* Change background color to yellow */
+    font-weight: bold; /* Make the text bold */
+}
+
+.delete {
+    color: white; /* Change text color to red */
+    background-color: #ff000085; /* Change background color to yellow */
+    font-weight: bold; /* Make the text bold */
+}
+
+/*Customizing the TreeView nodes*/
+.e-treeview .e-list-item {
+    line-height: 45px;
+    background-color: #c0c35e40
+}
+
+.e-treeview .e-fullrow {
+    height: 45px;
+}
+
+/*Customizing the text of TreeView nodes*/
+.e-treeview .e-list-text {
+    /* font-weight: bold; */
+    color: #c55f16;
+    font-size: 18px
+}
+
+.required-field::before {
+    content: "*";
+    color: red;
+}
+
+.modal {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -150px;
+    margin-top: -150px;
+}
+
+.modal-contentcss {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    top: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-bottom: -3px;
+    position: sticky;
+}
+
+.modal-bodycss {
+    position: relative;
+    padding: 15px;
+}
+
+.custom-modal-header {
+    border: 0;
+    text-align: center;
+    color: #1A1A1A !important;
+    font-size: 18px;
+    font-family: Rubik-Medium;
+    padding: 20px 0;
+}

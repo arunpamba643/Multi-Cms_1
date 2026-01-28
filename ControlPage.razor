@@ -1,0 +1,1631 @@
+﻿@page "/ControlPage/{TenantId}"
+@page "/ControlPage/{TenantId}/{PageId?}"
+@using AssociationEntities.Models;
+@using Demo_App.Models;
+@using Newtonsoft.Json
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.RichTextEditor
+@using Demo_App.Components
+@using Syncfusion.Blazor.FileManager
+
+<Breadcrumbs CrumbPaths="ControlPage" />
+<style>
+    .height-300 {
+        height: 300px !important;
+        overflow: hidden !important;
+    }
+
+    .height-400 {
+        height: 400px !important;
+        overflow: hidden !important;
+    }
+
+    .height-350 {
+        height: 350px !important;
+        overflow: hidden !important;
+    }
+
+    .folder-button {
+        background-color: #f3f4f6;
+        padding: 10px 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .folder-button:hover {
+            background-color: #e2e8f0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+</style>
+
+<style>
+    .height-300 {
+        max-height: 300px;
+    }
+
+    .gallery-image {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        max-height: 100%;
+        border-radius: 8px;
+        transition: transform 0.2s;
+    }
+
+        .gallery-image:hover {
+            transform: scale(1.05);
+        }
+</style>
+<div>
+
+    <EditForm Model="formData" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+
+        <div class="grid gap-2 grid-cols-4">
+            <div class="col-span-full">
+
+                <div class="flex justify-between items-center">
+                    @if (isPageCreated)
+                    {
+                        <h4 class="text-2xl font-extrabold p-1">Edit Page</h4>
+                    }
+                    else
+                    {
+                        <h4 class="text-2xl font-extrabold p-1">Add Page</h4>
+                    }
+                    <div class="col-span-full">
+                        <div class="my-2 text-right">
+                            <button type="submit" class="bg-primary btn mx-2 text-light" @onclick="() => {updatePageDetails();}">Save</button>
+                            @* <button class="bg-secondary btn mx-2 text-light" type="button">Cancel</button> *@
+                            <a href="/PageList/@tenantId" class="bg-secondary btn mx-2 text-light">Cancel</a>
+                            <a href="/PageList/@tenantId" class="bg-secondary btn mx-2 text-light">Back to Page List</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr />
+            </div>
+
+            <div class="mt-1">
+                <label for="BackgroundColor" class="block mb-2 text-sm font-medium text-gray-900">Title</label>
+                <div class="flex my-1 flex-col items-start justify-between p-0 h-10 bg-white">
+                    <InputText id="name" @bind-Value="formData.PageTitle" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Title" />
+                    <small> <ValidationMessage For="@(() => formData.PageTitle)" /></small>
+                </div>
+            </div>
+
+            <div class="mt-1">
+                <label for="selectFont" class="block mb-2 text-sm font-medium text-gray-900">Menu</label>
+
+                <select id="selectFont" @bind="@formData.MenuId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                    @foreach (var item in DropdownList)
+                    {
+
+                        <option value="@item.MenuId">@item.MenuName</option>
+
+                    }
+                </select>
+            </div>
+
+
+
+            <div class="mt-1">
+                <label for="BackgroundColor" class="block mb-2 text-sm font-medium text-gray-900">Url</label>
+                <div class="flex  my-1 flex-col  items-start justify-start p-0 h-10 bg-white">
+                    <InputText id="name" @bind-Value="formData.ResourcePath" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Resource Path" />
+                    <small>  <ValidationMessage For="@(() => formData.ResourcePath)" class="text-sm text-danger" /></small>
+                </div>
+            </div>
+
+            <div class="mt-1">
+                <label for="selectPageScopeType" class="block mb-2 text-sm font-medium text-gray-900">Page Scope Type</label>
+                <select id="selectPageScopeType" @bind="@formData.PageScopeType" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                    <option value="" selected>Please select</option>
+                    <option value="draft">Draft</option>
+                    <option value="public">Public</option>
+                </select>
+                <small> <ValidationMessage For="@(() => formData.PageScopeType)" class="text-sm text-danger" /></small>
+            </div>
+
+
+            <div class="mt-1">
+                <label class="block mb-2 text-sm font-medium text-gray-900">Is Landing Page</label>
+                <InputRadioGroup @bind-Value="formData.IsLandingPage" class="mt-3">
+                    <div class="flex items-center">
+                        <InputRadio id="yesRadio" Value="true" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" />
+                        <label for="yesRadio" class="ms-2 text-sm font-medium text-gray-900">Yes</label>
+                        <InputRadio id="noRadio" Value="false" class="ml-4 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" />
+                        <label for="noRadio" class="ms-2 text-sm font-medium text-gray-900">No</label>
+                    </div>
+                </InputRadioGroup>
+            </div>
+
+            <div class="mt-1">
+                <label class="block mb-2 text-sm font-medium text-gray-900">Footer Link</label>
+                <InputRadioGroup @bind-Value="formData.IsHomePage" class="mt-3">
+                    <div class="flex items-center">
+                        <InputRadio id="yesRadio" Value="true" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" />
+                        <label for="yesRadio" class="ms-2 text-sm font-medium text-gray-900">Yes</label>
+                        <InputRadio id="noRadio" Value="false" class="ml-4 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" />
+                        <label for="noRadio" class="ms-2 text-sm font-medium text-gray-900">No</label>
+                    </div>
+                </InputRadioGroup>
+            </div>
+
+            <div class="my-3 col-span-full">
+                <hr />
+            </div>
+
+        </div>
+    </EditForm>
+
+
+</div>
+
+@* ****************************** *@
+@* From Database *@
+@* ****************************** *@
+
+
+@* Showing existing rows, containers, components  *@
+@foreach (var row in rowsA)
+{
+    <div class="mt-2">
+
+        @if (row.Containers.Count == 0)
+        {
+            <button type="button" class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-6 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" @onclick="() => row.ShowRowModal = true">
+                <svg class="mx-auto h-16 w-16 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v20c0 4.418 7.163 8 16 8 1.381 0 2.721-.087 4-.252M8 14c0 4.418 7.163 8 16 8s16-3.582 16-8M8 14c0-4.418 7.163-8 16-8s16 3.582 16 8m0 0v14m0-4c0 4.418-7.163 8-16 8S8 28.418 8 24m32 10v6m0 0v6m0-6h6m-6 0h-6" />
+                </svg>
+                <span class="mt-2 block text-sm font-semibold text-gray-900">Create a new Layout</span>
+            </button>
+        }
+
+        @if (row.Containers.Count != 0)
+        {
+            @foreach (var container in row.Containers)
+            {
+                var NoofContainers = container.NoofContainers;
+
+                @if (NoofContainers > 0)
+                {
+                    <div class="@GetGridClass(NoofContainers) grid gap-4 h-auto">
+
+                        @{
+                            int componentCount = 1;
+                        }
+
+                        @foreach (var component in container.Components)
+                        {
+
+                            @* <div class="border border-gray-300 p-3 rounded-lg flex flex-column justify-center"> *@
+                            <div class="">
+
+                                @if (component.ComponentId > 0 && component.OrderNumber == componentCount && component.componentProperties.Count > 0)
+                                {
+                                    if (component.ComponentType == "ContactPerson")
+                                    {
+                                        Contact selectedItem = new Contact
+                                        {
+                                            Name = GetValueOrDefault(component, "Name"),
+                                            PhoneNumber = GetValueOrDefault(component, "PhoneNumber"),
+                                            EmailAddress = GetValueOrDefault(component, "EmailAddress"),
+                                            AvatarImageUrl = GetValueOrDefault(component, "AvatarImageUrl")
+                                        };
+                                        string Description = GetValueOrDefault(component, "Description");
+
+                                        <div class="height-300">
+                                            <div class="p-3 flex flex-col justify-center items-center w-100 rounded-2xl shadow-xl overflow-hidden">
+                                                <img src="@selectedItem.AvatarImageUrl" class="contact-person-profile-image" />
+                                                <h5 class="mt-3 font-bold text-lg"> @selectedItem.Name </h5>
+                                                <p class="line-clamp-2 text-ellipsis text-sm mt-2 text-gray-800 text-center">
+                                                    @Description
+                                                </p>
+                                                <div class="flex flex-wrap justify-center mt-2 ">
+                                                    <p class="mt-1 text-sm mr-2">
+                                                        <i class="fas fa-phone"></i>
+                                                        @selectedItem.PhoneNumber
+                                                    </p>
+                                                    <p class="mt-1 text-sm overflow-hidden">
+                                                        <i class="far fa-envelope"></i>
+                                                        @selectedItem.EmailAddress
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="w-100 p-1 flex justify-between">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+
+
+
+
+
+
+                                    }
+                                    else if (component.ComponentType == "EventDetail")
+                                    {
+                                        EventModel Events = new EventModel
+                                        {
+                                            EventName = GetValueOrDefault(component, "EventName"),
+                                            CreatorName = GetValueOrDefault(component, "CreatorName"),
+                                            EventStartTime = DateTime.Parse(GetValueOrDefault(component, "EventStartTime")),
+                                            EventType = GetValueOrDefault(component, "EventType"),
+                                            EventDescription = GetValueOrDefault(component, "EventDescription")
+                                        };
+
+                                        <div class="height-300">
+                                            <div class="flex flex-col justify-center items-start w-100 rounded-2xl shadow-xl overflow-hidden">
+                                                <div class="h-36 overflow-hidden">
+                                                    <img src="https://res.cloudinary.com/dzax35hss/image/upload/v1707464251/cld-sample-3.jpg" class="block">
+                                                </div>
+                                                <div class="p-3 w-full	">
+                                                    <h4 class="font-extrabold line-clamp-1 text-ellipsis">
+                                                        @Events.EventName
+                                                    </h4>
+                                                    <h6 class="text-sm text-gray-500  mt-1">
+                                                        <i class="fas fa-calendar-alt"></i>
+                                                        @Events.EventStartTime.ToString("MM/dd/yyyy")
+                                                    </h6>
+                                                    <p class="text-sm mt-2 line-clamp-2 text-ellipsis">
+                                                        @((MarkupString)Events.EventDescription)
+                                                    </p>
+                                                    <div class="flex justify-between items-center mt-1 flex-wrap">
+                                                        <span class="text-sm bg-gray-800 px-2 rounded-3xl text-white block mt-1">@Events.EventType</span>
+                                                        <div class="text-gray-500 text-sm mt-1">
+                                                            <i class="fas fa-user-circle"></i>
+                                                            @Events.CreatorName
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="w-100 p-1 flex justify-between">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+
+
+                                    }
+                                    else if (component.ComponentType == "BlogDetail")
+                                    {
+
+                                        string BlogId = GetValueOrDefault(component, "BlogId");
+
+                                        BlogPagesModel Blog = GetBlogDetailsById(BlogId);
+
+
+                                        <div class="height-300">
+                                            <div class="flex flex-col justify-center items-start w-100 rounded-2xl shadow-xl overflow-hidden">
+                                                <div class="h-36 overflow-hidden">
+                                                    <img src="@Blog.HeaderImage" class="block">
+                                                </div>
+                                                <div class="p-3 w-fulL">
+                                                    <h4 class="font-extrabold line-clamp-1 text-ellipsis">
+                                                        @Blog.Title
+                                                    </h4>
+                                                    <h6 class="text-sm text-gray-500  mt-1">
+                                                        <i class="fas fa-history"></i>
+                                                        Posted on
+                                                        @Blog.CreatedAt
+                                                    </h6>
+                                                    <p class="text-sm mt-2 line-clamp-2 text-ellipsis">
+                                                        @((MarkupString)Blog.Description)
+                                                    </p>
+                                                    <div class="flex justify-end items-center mt-1 flex-wrap">
+
+                                                        <div class="text-gray-500 text-sm mt-1">
+                                                            <i class="fas fa-user-circle"></i>
+                                                            The Author
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="w-100 p-1 flex justify-between">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+
+                                    }
+                                    else if (component.ComponentType == "FreeText")
+                                    {
+                                        string text = GetValueOrDefault(component, "Text");
+
+                                        <div class="p-2 h-auto height-300">
+
+                                            <div class="flex flex-column justify-between align-center">
+                                                <p class="text-justify indent-8 p-2">
+                                                    @text
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="w-100 p-1 flex justify-end">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (component.ComponentType == "BlankSpace")
+                                    {
+                                        string Height = GetValueOrDefault(component, "Height");
+                                        string Width = GetValueOrDefault(component, "Width");
+                                        <div class="p-2 h-auto height-300 border">
+
+                                            <div class="flex flex-column justify-between align-center">
+                                                <div style="min-height: @Height; width : @Width;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-100 p-1 flex justify-end">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (component.ComponentType == "Image")
+                                    {
+                                        string image = GetValueOrDefault(component, "image");
+                                        string ImageFit = GetValueOrDefault(component, "imageFit");
+                                        string ImageFitType = GetValueOrDefault(component, "imageFitType");
+                                        string ImageWidth = GetValueOrDefault(component, "imageWidth");
+                                        string ImageHeight = GetValueOrDefault(component, "imageHeight");
+
+                                        ImageWidth = ImageWidth + "px";
+                                        ImageHeight = ImageHeight + "px";
+                                        <div class="p-2  height-300">
+                                            <div class="flex h-52 justify-center overflow-hidden rounded-lg border border-b-slate-600 align-middle">
+                                                <img src="@image" style="width:@ImageWidth;height:@ImageHeight" class="@ImageFit" />
+                                            </div>
+                                        </div>
+                                        <div class="w-100 p-1 flex justify-end">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (component.ComponentType == "ImageGallery")
+                                    {
+                                        string imagesString = GetValueOrDefault(component, "images");
+                                        var imagesList = JsonConvert.DeserializeObject<List<ImageData>>(imagesString);
+                                        <div class="relative p-2 height-300">
+                                            <div class="flex h-52 justify-center overflow-hidden rounded-lg border border-b-slate-600 align-middle">
+                                                <img src="@imagesList[0].ImageUrl" alt="Gallery Image" class="gallery-image w-full h-full rounded-lg" />
+                                            </div>
+                                            <div class="absolute top-2 left-2 bg-opacity-50 bg-gray-800 text-white p-2 rounded">
+                                                <h2 class="text-lg font-bold">Book Event by tenant</h2>
+                                            </div>
+                                            <div class="absolute top-2 right-2 p-2">
+                                                <svg class="w-[36px] h-[36px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4" d="m3 16 5-7 6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="w-100 p-1 flex justify-end">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (component.ComponentType == "HTMLEditor")
+                                    {
+                                        string HTMLContent = GetValueOrDefault(component, "HTMLContent");
+                                        <div class="p-2 h-auto  height-300">
+
+                                            <div class="flex flex-column justify-between align-center">
+                                                <p class="text-justify indent-8 p-2">
+                                                    @((MarkupString)HTMLContent)
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="w-100 p-1 flex justify-end">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (component.ComponentType == "EventList")
+                                    {
+
+                                        string divisionIds = component.componentProperties.Where(x => x.Key == "divisionIds").Select(x => x.Value).FirstOrDefault() ?? "";
+                                        string disciplineIds = component.componentProperties.Where(x => x.Key == "disciplineIds").Select(x => x.Value).FirstOrDefault() ?? "";
+                                        string tagIds = component.componentProperties.Where(x => x.Key == "tagIds").Select(x => x.Value).FirstOrDefault() ?? "";
+                                        string creatorIds = component.componentProperties.Where(x => x.Key == "creatorIds").Select(x => x.Value).FirstOrDefault() ?? "";
+
+                                        AssociationEntities.CustomModels.EventFilters eventFilters = new AssociationEntities.CustomModels.EventFilters();
+
+
+                                        <EventList EventFilters="eventFilters"></EventList>
+
+                                        <div class="w-100 p-1 flex justify-end ">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (component.ComponentType == "BlogList")
+                                    {
+
+                                        string divisionIds = GetValueOrDefault(component, "divisionIds");
+                                        string disciplineIds = GetValueOrDefault(component, "disciplineIds");
+                                        string tagIds = GetValueOrDefault(component, "tagIds");
+                                        string creatorIds = GetValueOrDefault(component, "creatorIds");
+
+                                        AssociationEntities.CustomModels.BlogFilters blogFilters = new AssociationEntities.CustomModels.BlogFilters
+                                        {
+                                            TenantId = Convert.ToInt32(tenantId),
+                                            DivisionsIds = divisionIds,
+                                            DisciplinesIds = disciplineIds,
+                                            TagIds = tagIds,
+                                        };
+
+                                        <BlogLists BlogFilters="blogFilters"></BlogLists>
+                                        <div class="w-100 p-1 flex justify-end">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (component.ComponentType == "Sponsors")
+                                    {
+                                        string avatarUrl = component.componentProperties.Where(x => x.Key == "AvatarUrl").Select(x => x.Value).FirstOrDefault() ?? "";
+                                        string name = component.componentProperties.Where(x => x.Key == "Name").Select(x => x.Value).FirstOrDefault() ?? "";
+
+                                        <div class="text-center  height-300">
+                                            <img src="@avatarUrl" class="object-contain mx-auto" />
+                                            <small class="mt-2 text-gray-500">@name</small>
+                                        </div>
+                                        <div class="w-100 p-1 flex justify-end">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (component.ComponentType == "Honoree")
+                                    {
+                                        Honoree selectedItem = new Honoree
+                                        {
+                                            Name = GetValueOrDefault(component, "Name"),
+                                            PhoneNumber = GetValueOrDefault(component, "PhoneNumber"),
+                                            EmailAddress = GetValueOrDefault(component, "EmailAddress"),
+                                            AvatarImageUrl = GetValueOrDefault(component, "AvatarImageUrl"),
+                                            //Role = GetValueOrDefault(component, "Role"),
+                                            Date = DateTime.Parse(GetValueOrDefault(component, "Date"))
+                                        };
+                                        string Description = GetValueOrDefault(component, "Description");
+
+                                        @* <div class="height-320">
+            <div class="p-3 flex flex-col justify-center items-center w-100 rounded-2xl shadow-xl overflow-hidden">
+            <img src="@selectedItem.AvatarImageUrl" class="contact-person-profile-image" />
+            <div class="flex flex-wrap justify-center mt-2 ">
+            <p class="mt-3 font-bold text-lg">
+            <i class="fas fa-award"></i>
+            @selectedItem.Name
+            </p>
+            </div>
+            <p class="mt-1 text-sm mr-2">
+            @selectedItem.Date
+            </p>
+            <div class="flex flex-wrap justify-center mt-2 ">
+            <p class="mt-1 text-sm mr-2">
+            @selectedItem.Role
+            </p>
+            </div>
+            </div>
+            </div> *@
+
+                                        <div class="folder-tile-container">
+                                            <div class="folder-tile" @onclick="() => ToggleFolderView()">
+                                                <div class="p-3 flex flex-col justify-center items-center w-100 rounded-2xl shadow-xl overflow-hidden">
+                                                    <h3 class="mb-4">All Folders</h3>
+                                                    <div class="folder-grid">
+                                                        @foreach (var folder in folders1)
+                                                        {
+                                                            <div class="folder-item">
+                                                                <div class="flex flex-wrap justify-center mt-2">
+                                                                    <p class="mt-3 font-bold text-lg">
+                                                                        <i class="fas fa-folder"></i>
+                                                                        @folder.Name
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @if (selectedFolder1 != null)
+                                            {
+                                                <div class="file-view">
+                                                    <h3 class="mb-4">@selectedFolder1.Name - Files</h3>
+                                                    @foreach (var file in selectedFolder1.Files)
+                                                    {
+                                                        <div class="file-item">
+                                                            <p>@file.FileName</p>
+                                                        </div>
+                                                    }
+
+                                                    <button class="mt-4 p-2 bg-blue-500 text-white rounded" @onclick="() => selectedFolder1 = null">
+                                                        Back to All Folders
+                                                    </button>
+                                                </div>
+                                            }
+                                        </div>
+
+
+
+                                        <div class="w-100 p-1 flex justify-between">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (component.ComponentType == "Honorees")
+                                    {
+                                        @* string honoreesDataString = GetValueOrDefault(component, "honoreesData");
+            var honoree = JsonConvert.DeserializeObject<Honoree>(honoreesDataString); *@
+
+                                        Honoree selectedItem = new Honoree
+                                        {
+                                            Name = GetValueOrDefault(component, "Name"),
+                                            PhoneNumber = GetValueOrDefault(component, "PhoneNumber"),
+                                            EmailAddress = GetValueOrDefault(component, "EmailAddress"),
+                                            AvatarImageUrl = GetValueOrDefault(component, "AvatarImageUrl"),
+                                            Description = GetValueOrDefault(component, "Description"),
+                                        };
+                                        string roles = GetValueOrDefault(component, "RolesData");
+                                        var rolesList = JsonConvert.DeserializeObject<List<Role>>(roles);
+
+                                        <div class="height-320">
+                                            <div class="p-3 flex flex-col justify-center items-center w-100 rounded-2xl shadow-xl overflow-hidden">
+                                                <img src="@selectedItem.AvatarImageUrl" class="contact-person-profile-image" />
+                                                <div class="flex flex-wrap justify-center mt-2 ">
+                                                    <p class="mt-3 font-bold text-lg">
+                                                        <i class="fas fa-award"></i>
+                                                        @selectedItem.Name
+                                                    </p>
+                                                </div>
+                                                <p class="mt-1 text-sm mr-2">
+                                                    @selectedItem.Date
+                                                </p>
+                                                <div class="flex flex-wrap justify-center mt-2 ">
+                                                    <p class="mt-1 text-sm mr-2">
+                                                        @rolesList[0].RoleName
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="w-100 p-1 flex justify-between">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    }
+
+                                    else if (component.ComponentType == "FileShare")
+                                    {
+                                        FileSharing selectedItem = new FileSharing
+                                        {
+                                            FileName = GetValueOrDefault(component, "fileName"),
+                                            FileDetailsJson = GetValueOrDefault(component, "SelectedFileDetailsjson")
+
+                                        };
+
+                                        <div style="box-shadow:0px 0px 0px 0px black;padding:1rem;">
+                                            <div class="text-center">
+                                                <img src="https://cdn-icons-png.freepik.com/512/2246/2246713.png" alt="@GetValueOrDefault(component, "fileName")" style="width:200px;margin: 0 auto;">
+                                                <h6> @GetValueOrDefault(component, "fileName")</h6>
+                                                <button type="button" class="mt-3 btn btn-block btn-primary fileDwnBtn" @onclick="() => { DownloadFile(selectedItem);}">Download File</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="w-100 p-1 flex justify-end">
+                                            <button @onclick="() => {ComponentSettings(component, container);}" class="bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+                                            <button type="button" @onclick="() => DeleteComponent(component.ComponentId) " class="@GetFontSizeClass(row.Containers.Count) bg-red-400 rounded inline-flex items-center mt-2 ml-2 p-1 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                                                Remove
+                                            </button>
+                                        </div>
+
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    <div class="text-center border rounded-lg flex flex-col items-center p-2">
+                                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                            <path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                        </svg>
+                                        <h3 class="mt-2 text-sm font-semibold text-gray-900">No Component</h3>
+                                        <p class="mt-1 text-sm text-gray-500">Get started by creating a new Component.</p>
+
+                                        <div class="mt-3">
+                                            <button type="button" @onclick="() => {component.ShowColumnModal = true; component.ContainerId = container.ContainerId; }" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                                <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                                                </svg>
+                                                Create a Component <br />
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                                @{
+                                    componentCount++;
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+
+            }
+        }
+
+        <div class="flex justify-end mt-2">
+            <button type="button" class="inline-flex justify-center rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 sm:col-start-1 sm:mt-0" @onclick="() => DeleteRowInPage(row.RowId)">
+                Remove
+            </button>
+        </div>
+    </div>
+}
+
+@if (isPageCreated)
+{
+    @* 'Create new data base' button  *@
+    <div class="align-content-center justify-center items-center mt-3 mb-5 w-100">
+        <button type="button" class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" @onclick="AddNewRowToPage">
+            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v20c0 4.418 7.163 8 16 8 1.381 0 2.721-.087 4-.252M8 14c0 4.418 7.163 8 16 8s16-3.582 16-8M8 14c0-4.418 7.163-8 16-8s16 3.582 16 8m0 0v14m0-4c0 4.418-7.163 8-16 8S8 28.418 8 24m32 10v6m0 0v6m0-6h6m-6 0h-6" />
+            </svg>
+            <span class="mt-2 block text-sm font-semibold text-gray-900">Create a new row</span>
+        </button>
+    </div>
+}
+
+@* Model to select layout  *@
+@foreach (var row in rowsA)
+{
+    if (row.ShowRowModal)
+    {
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                    <div>
+                        <div class="mt-3 text-center sm:mt-5">
+                            <h3 class="text-base font-semibold leading-6 text-gray-900">Select Layout</h3>
+                        </div>
+                        <div class="cursor-pointer hover:bg-gray-200 p-2" @onclick='() => {AddContainer(row.RowId,1);row.ShowRowModal = false; }'>
+                            <p>1 Column</p>
+                            <div class="border-2 border-gray-300 rounded-md p-2">
+                                <div class="grid grid-cols-1">
+                                    <div class="border border-black h-8"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cursor-pointer hover:bg-gray-200 p-2" @onclick='() => {AddContainer(row.RowId,2);row.ShowRowModal = false; }'>
+                            <p>2 Columns</p>
+                            <div class="border-2 border-gray-300 rounded-md p-2">
+                                <div class="grid grid-cols-2 ">
+                                    <div class="border border-black h-8"></div>
+                                    <div class="border border-black h-8"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cursor-pointer hover:bg-gray-200 p-2" @onclick='() =>{ AddContainer(row.RowId, 3);row.ShowRowModal = false; }'>
+                            <p>3 Columns</p>
+                            <div class="border-2 border-gray-300 rounded-md p-2">
+                                <div class="grid grid-cols-3">
+                                    <div class="border border-black h-8"></div>
+                                    <div class="border border-black h-8"></div>
+                                    <div class="border border-black h-8"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cursor-pointer hover:bg-gray-200 p-2" @onclick='() =>{ AddContainer(row.RowId, 4);row.ShowRowModal = false; }'>
+                            <p>4 Columns</p>
+                            <div class="border-2 border-gray-300 rounded-md p-2">
+                                <div class="grid grid-cols-4">
+                                    <div class="border border-black h-8"></div>
+                                    <div class="border border-black h-8"></div>
+                                    <div class="border border-black h-8"></div>
+                                    <div class="border border-black h-8"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+                        <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 sm:col-start-1 sm:mt-0" @onclick="() => row.ShowRowModal = false ">Close</button>
+                    </div>
+                </div>
+            </div>
+            show6:ShowRowModal <br />
+        </div>
+    }
+}
+
+@* Model to choose type of component *@
+@foreach (var row in rowsA)
+{
+    foreach (var container in row.Containers)
+    {
+
+
+        foreach (var component in container.Components)
+
+            if (component.ShowColumnModal)
+            {
+
+                <div class="relative z-10" role="dialog" aria-modal="true">
+
+                    <div class="fixed inset-0 bg-gray-100 bg-opacity-25 transition-opacity"></div>
+
+                    <div class="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
+
+                        <div class="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
+                            <div class="relative">
+                                <svg class="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+                                </svg>
+                                <input type="text" class="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" placeholder="Search..." role="combobox" aria-expanded="false" aria-controls="options">
+                            </div>
+
+                            <!-- Results, show/hide based on command palette state -->
+                            <ul class="max-h-96 transform-gpu scroll-py-3 overflow-y-auto p-3" id="options" role="listbox">
+                                <!-- Active: "bg-gray-100" -->
+                                @foreach (var item in EnumItemList)
+                                {
+                                    if (container.NoofContainers != 1 && (item.DisplayName.Equals("BlogList") || item.DisplayName.Equals("EventList")))
+                                        continue;
+
+                                    if (container.NoofContainers == 1 && (!item.DisplayName.Equals("BlogList") && !item.DisplayName.Equals("EventList")))
+                                        continue;
+
+
+
+                                    <li class="group flex cursor-default select-none rounded-xl p-3" id="option-1" role="option" tabindex="-1">
+                                        <div class="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-indigo-500">
+                                            <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-4 flex-auto">
+                                            <!-- Active: "text-gray-900", Not Active: "text-gray-700" -->
+                                            <p class="text-sm font-medium text-gray-700">@item.DisplayName</p>
+                                            <!-- Active: "text-gray-700", Not Active: "text-gray-500" -->
+                                            <p class="text-sm text-gray-500">Add freeform text with basic formatting options.</p>
+                                            <button @onclick="()=> { selectComponentType(component, item) ; }">Select</button>
+                                        </div>
+
+                                    </li>
+
+
+                                }
+
+                            </ul>
+
+                            <div class="p-3 flex justify-end mt-1">
+                                <button @onclick='()=>{ component.ShowColumnModal = false; currentComponent = new Models.Component(); }' class="bg-blue-400 rounded inline-flex items-center mt-2 p-2 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                                    Cancel
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            }
+    }
+}
+
+@* Modal to feed component & update values *@
+@foreach (var row in rowsA)
+{
+    foreach (var container in row.Containers)
+    {
+        foreach (var component in container.Components)
+        {
+            @if (component.ShowPopup)
+            {
+
+                <div class="relative z-10 p-4" role="dialog" aria-modal="true">
+
+                    <div class="fixed inset-0 bg-gray-100 bg-opacity-25 transition-opacity"></div>
+
+                    <div class="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
+                        <div class="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl p-4 ring-1 ring-black ring-opacity-5 transition-all">
+
+                            @if (currentComponent.ComponentType == "ContactPerson")
+                            {
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "Name", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "Description", Value = "" });
+                                }
+                                ComponentPropertyModel Name = currentComponent.componentProperties.Where(x => x.Key == "Name").FirstOrDefault();
+                                ComponentPropertyModel Description = currentComponent.componentProperties.Where(x => x.Key == "Description").FirstOrDefault();
+
+                                <h3>Contact Information</h3>
+                                <div class="my-2"><hr /></div>
+
+
+                                <div class="relative m-2">
+                                    <svg class="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+                                    </svg>
+                                    <input type="text" @bind="searchTerm" @bind:event="oninput" placeholder="@(( Name.Value != "" ) ? Name.Value : "Search...")" class="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" role="combobox" aria-expanded="false" aria-controls="options">
+                                </div>
+                                @if (!string.IsNullOrEmpty(searchTerm) && filteredItems.Any())
+                                {
+                                    @foreach (var item in filteredItems)
+                                    {
+                                        <p @onclick="() => {selectItem(item); Name.Value = item.Name;}">@item.Name</p>
+                                    }
+                                }
+                                <div>
+                                    <div>
+                                        <label for="comment" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                                        <div class="mt-2">
+                                            <textarea maxlength="250" @bind="Description.Value" rows="4" name="comment" id="comment" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                                            <span class="text-sm font-italic text-muted">Max length is 250 characters</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            }
+                            else if (currentComponent.ComponentType == "EventDetail")
+                            {
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "EventName", Value = "" });
+                                }
+                                ComponentPropertyModel EventName = currentComponent.componentProperties.Where(x => x.Key == "EventName").FirstOrDefault();
+
+
+                                <h3>Event Information</h3>
+                                <div class="my-2"><hr /></div>
+                                <div class="relative m-2 h-15">
+                                    <svg class="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+                                    </svg>
+                                    <input type="text" @bind="searchEventTerm" @bind:event="oninput" placeholder="@((EventName.Value != null) ? EventName.Value : "Search...")" class="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" role="combobox" aria-expanded="false" aria-controls="options">
+                                </div>
+                                @if (!string.IsNullOrEmpty(searchEventTerm) && filteredEvents.Any())
+                                {
+                                    @foreach (var item in filteredEvents)
+                                    {
+                                        <p @onclick="() => {selectItem(item,currentComponent); EventName.Value = item.EventName ; }">@item.EventName</p>
+                                    }
+                                }
+                            }
+                            else if (currentComponent.ComponentType == "BlogDetail")
+                            {
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "BlogName", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "BlogId", Value = "" });
+
+                                }
+                                ComponentPropertyModel BlogName = currentComponent.componentProperties.Where(x => x.Key == "BlogName").FirstOrDefault();
+                                ComponentPropertyModel BlogId = currentComponent.componentProperties.Where(x => x.Key == "BlogId").FirstOrDefault();
+
+
+                                <h3>Blogs Information</h3>
+                                <div class="my-2"><hr /></div>
+                                <div class="relative m-2 h-15">
+                                    <svg class="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+                                    </svg>
+                                    <input type="text" @bind="searchBlogTerm" @bind:event="oninput" placeholder="@((BlogName.Value != null) ? BlogName.Value : "Search...")" class="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" role="combobox" aria-expanded="false" aria-controls="options">
+                                </div>
+                                @if (!string.IsNullOrEmpty(searchBlogTerm) && filteredBlogs.Any())
+                                {
+                                    @foreach (var item in filteredBlogs)
+                                    {
+                                        <p @onclick="() => {selectItem(item,currentComponent);BlogName.Value = item.Title.ToString(); BlogId.Value = item.BpId.ToString(); }">@item.Title</p>
+                                    }
+                                }
+                            }
+                            else if (currentComponent.ComponentType == "FreeText")
+                            {
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "Text", Value = "" });
+                                }
+                                ComponentPropertyModel Text = currentComponent.componentProperties.Where(x => x.Key == "Text").FirstOrDefault();
+
+                                <h3>Free Text</h3>
+                                <div class="my-2"><hr /></div>
+                                <div class="relative m-2 h-15">
+                                    <textarea maxlength="250" @bind="Text.Value" rows="4" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                                    <span class="text-sm font-italic text-muted">Max length is 250 characters</span>
+                                </div>
+
+                            }
+                            else if (currentComponent.ComponentType == "Image")
+                            {
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "image", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "imageFit", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "imageFitType", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "imageWidth", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "imageHeight", Value = "" });
+
+                                }
+                                ComponentPropertyModel Image = currentComponent.componentProperties.Where(x => x.Key == "image").FirstOrDefault();
+                                ComponentPropertyModel ImageFit = currentComponent.componentProperties.Where(x => x.Key == "imageFit").FirstOrDefault();
+                                ComponentPropertyModel ImageFitType = currentComponent.componentProperties.Where(x => x.Key == "imageFitType").FirstOrDefault();
+                                ComponentPropertyModel ImageWidth = currentComponent.componentProperties.Where(x => x.Key == "imageWidth").FirstOrDefault();
+                                ComponentPropertyModel ImageHeight = currentComponent.componentProperties.Where(x => x.Key == "imageHeight").FirstOrDefault();
+                                <h3>Image upload</h3>
+                                <div class="my-2"><hr /></div>
+                                <div class="p-4">
+
+                                    <div class="flex justify-start items-center m-2">
+                                        <!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
+                                        <svg fill="#d1d1d1" height="13px" width="13px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 455.00 455.00" xml:space="preserve" stroke="#d1d1d1" stroke-width="0.00455">
+
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+
+                                        <g id="SVGRepo_iconCarrier"> <path d="M0,0v455h455V0H0z M259.405,80c17.949,0,32.5,14.551,32.5,32.5s-14.551,32.5-32.5,32.5s-32.5-14.551-32.5-32.5 S241.456,80,259.405,80z M375,375H80v-65.556l83.142-87.725l96.263,68.792l69.233-40.271L375,299.158V375z" /> </g>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </svg>
+                                        <input type="text" @bind="Image.Value" @bind:event="oninput" placeholder="@(( Image.Value != "" ) ? Image.Value : "Paste image URL Here")" class="w-100 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" role="combobox" aria-expanded="false" aria-controls="options">
+                                    </div>
+                                    <div class="mt-1">
+                                        <label for="selectFont" class="block mb-2 text-sm font-medium text-gray-900">Menu</label>
+
+
+                                        <select id="selectFont" @bind="@ImageFit.Value" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                                            <option>Please select</option>
+                                            <option value="ImageDimensions">Same as image dimensions</option>
+                                            <option value="CustomRatio">Custom Ratio</option>
+                                            <option value="object-cover">Fit to container</option>
+                                        </select>
+
+                                        @if (ImageFit.Value == "CustomRatio")
+                                        {
+                                            <div class="grid grid-cols-2 mt-3">
+                                                <div>
+                                                    <input type="text" @bind="ImageWidth.Value" @bind:event="oninput" placeholder="Image Width" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                                                </div>
+                                                <div>
+                                                    <input type="text" @bind="ImageHeight.Value" @bind:event="oninput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                                                </div>
+
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            ImageWidth.Value = "";
+                                            ImageHeight.Value = "";
+                                        }
+
+                                    </div>
+
+
+                                    <hr class="my-3" />
+
+                                    <div class="flex justify-center align-center mt-4 mx-auto" style="width:150px; height : 150px;">
+                                        <img src="@Image.Value" class="object-contain" />
+                                    </div>
+
+                                </div>
+
+
+                            }
+
+                            else if (currentComponent.ComponentType == "ImageGallery")
+                            {
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "images", Value = "" });
+                                }
+                                ComponentPropertyModel Image = currentComponent.componentProperties.Where(x => x.Key == "images").FirstOrDefault();
+                                List<ImageData> existingImagesList = new List<ImageData>();
+                                if (Image.Value != null && Image.Value != "")
+                                    existingImagesList = JsonConvert.DeserializeObject<List<ImageData>>(Image.Value);
+
+                                <div class="p-4">
+                                    <div class="flex justify-start items-center m-2">
+                                        @if (!string.IsNullOrEmpty(tempImg))
+                                        {
+                                            <img src="@tempImg" alt="Preview" class="w-12 h-12 object-cover rounded border border-gray-300" />
+                                        }
+                                        else
+                                        {
+                                            <!-- Placeholder for space when no image is present -->
+                                            <div class="w-12 h-12"></div>
+                                        }
+
+                                        <!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
+                                        <svg fill="#d1d1d1" height="13px" width="13px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 455.00 455.00" xml:space="preserve" stroke="#d1d1d1" stroke-width="0.00455">
+
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+
+                                        <g id="SVGRepo_iconCarrier"> <path d="M0,0v455h455V0H0z M259.405,80c17.949,0,32.5,14.551,32.5,32.5s-14.551,32.5-32.5,32.5s-32.5-14.551-32.5-32.5 S241.456,80,259.405,80z M375,375H80v-65.556l83.142-87.725l96.263,68.792l69.233-40.271L375,299.158V375z" /> </g>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </svg>
+                                        <input type="text" @bind="tempImg" @bind:event="oninput" placeholder="@(( Image.Value != "" ) ? "Paste another image URL Here" : "Paste image URL Here")" class="w-100 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" role="combobox" aria-expanded="false" aria-controls="options">
+                                        <button @onclick="() => AppendImageUrl(Image,tempImg,existingImagesList)" class="ml-2 p-1 bg-gray-200 hover:bg-gray-300 text-sm text-gray-700">
+                                            Add URL
+                                        </button>
+                                    </div>
+                                </div>
+
+                                foreach (var imageData in existingImagesList)
+                                {
+
+                                    <div class="flex justify-start items-center m-2">
+                                        @if (!string.IsNullOrEmpty(imageData.ImageUrl))
+                                        {
+                                            <img src="@imageData.ImageUrl" alt="Preview" class="w-12 h-12 object-cover rounded border border-gray-300" />
+                                        }
+                                        else
+                                        {
+                                            <!-- Placeholder for space when no image is present -->
+                                            <div class="w-12 h-12"></div>
+                                        }
+
+                                        <!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
+                                        <svg fill="#d1d1d1" height="13px" width="13px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 455.00 455.00" xml:space="preserve" stroke="#d1d1d1" stroke-width="0.00455" class="ml-2">
+
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+
+                                        <g id="SVGRepo_iconCarrier"> <path d="M0,0v455h455V0H0z M259.405,80c17.949,0,32.5,14.551,32.5,32.5s-14.551,32.5-32.5,32.5s-32.5-14.551-32.5-32.5 S241.456,80,259.405,80z M375,375H80v-65.556l83.142-87.725l96.263,68.792l69.233-40.271L375,299.158V375z" /> </g>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </svg>
+                                        <input type="text" value="@imageData.ImageUrl" @oninput="(e) => OnInputChange(Image,existingImagesList,imageData, e)" placeholder="@((Image.Value != "" ) ? "Paste another image URL Here" : "Paste image URL Here")" class="w-100 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" role="combobox" aria-expanded="false" aria-controls="options">
+                                        @* <input type="text" @bind="temp" placeholder="@(( Image.Value != "" ) ? "Paste another image URL Here" : "Paste image URL Here")" class="w-100 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" role="combobox" aria-expanded="false" aria-controls="options"> *@
+                                        <!-- Edit Button -->
+                                        <button @onclick="() => UpdateImageUrl(Image,imageData.ImageUrl,existingImagesList,imageData)" class="ml-2 p-1 bg-gray-200 hover:bg-gray-300 text-sm text-gray-700">
+                                            <svg class="w-[30px] h-[30px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4" d="M5 12h14m-7 7V5" />
+                                            </svg>
+                                        </button>
+
+                                        <!-- Delete Button -->
+                                        <button @onclick="() => DeleteImageUrl(Image,existingImagesList,imageData)" class="ml-2 p-1 bg-gray-200 hover:bg-gray-300 text-sm text-gray-700">
+                                            <svg class="w-[30px] h-[30px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4" d="M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                }
+                                string commaSeperatedValue = "";
+                                //Image.Value = "https://res.cloudinary.com/dzax35hss/image/upload/v1707464247/samples/man-on-a-street.jpg,https://res.cloudinary.com/dzax35hss/image/upload/v1707464247/samples/man-on-a-street.jpg,https://res.cloudinary.com/dzax35hss/image/upload/v1707464247/samples/man-on-a-street.jpg,https://res.cloudinary.com/dzax35hss/image/upload/v1707464247/samples/man-on-a-street.jpg";
+                            }
+                            else if (currentComponent.ComponentType == "HTMLEditor")
+                            {
+                                <h3>HTML Editor</h3>
+                                <div class="my-2"><hr /></div>
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "HTMLContent", Value = "" });
+                                }
+                                ComponentPropertyModel HTMLContent = currentComponent.componentProperties.Where(x => x.Key == "HTMLContent").FirstOrDefault();
+                                <SfRichTextEditor MaxLength="250" @bind-Value="HTMLContent.Value">
+                                    <RichTextEditorToolbarSettings Items="@Tools" />
+                                </SfRichTextEditor>
+                                <span class="text-sm font-italic text-muted">Max length is 250 characters</span>
+
+                            }
+                            else if (currentComponent.ComponentType == "EventList")
+                            {
+                                <h3>Event List</h3>
+                                <div class="my-2"><hr /></div>
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    @* currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "EventTypeFilter", Value = "" }); *@
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "divisionIds", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "disciplineIds", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "tagIds", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "creatorIds", Value = "" });
+                                }
+
+                                ComponentPropertyModel divisionIds = currentComponent.componentProperties.Where(x => x.Key == "divisionIds").FirstOrDefault();
+                                ComponentPropertyModel disciplineIds = currentComponent.componentProperties.Where(x => x.Key == "disciplineIds").FirstOrDefault();
+                                ComponentPropertyModel tagIds = currentComponent.componentProperties.Where(x => x.Key == "tagIds").FirstOrDefault();
+                                ComponentPropertyModel creatorIds = currentComponent.componentProperties.Where(x => x.Key == "creatorIds").FirstOrDefault();
+
+                                <select @bind="divisionIds.Value" class="w-full h-10">
+                                    <option value="">Select Division</option>
+                                    <option value="division1">Divison 1</option>
+                                    <option value="division2">Divison 2</option>
+                                    <option value="division3">Divison 3</option>
+                                    <option value="division4">Divison 4</option>
+                                </select>
+                                <select @bind="disciplineIds.Value" class="w-full h-10">
+                                    <option value="">Select Discipline</option>
+                                    <option value="discipline1">Discipline 1</option>
+                                    <option value="discipline2">Discipline 2</option>
+                                    <option value="discipline3">Discipline 3</option>
+                                    <option value="discipline4">Discipline 4</option>
+                                </select>
+                                <select @bind="tagIds.Value" class="w-full h-10">
+                                    <option value="">Select Tag</option>
+                                    <option value="tag1">Tag 1</option>
+                                    <option value="tag1">Tag 2</option>
+                                    <option value="tag1">Tag 3</option>
+                                    <option value="tag1">Tag 4</option>
+                                </select>
+
+
+                            }
+                            else if (currentComponent.ComponentType == "BlogList")
+                            {
+                                <h3>Blog List</h3>
+                                <div class="my-2"><hr /></div>
+
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "divisionIds", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "disciplineIds", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "tagIds", Value = "" });
+
+
+                                }
+
+                                ComponentPropertyModel divisionIds = currentComponent.componentProperties.Where(x => x.Key == "divisionIds").FirstOrDefault();
+                                ComponentPropertyModel disciplineIds = currentComponent.componentProperties.Where(x => x.Key == "disciplineIds").FirstOrDefault();
+                                ComponentPropertyModel tagIds = currentComponent.componentProperties.Where(x => x.Key == "tagIds").FirstOrDefault();
+
+
+                                <div class="mb-2">
+                                    <label for="" class="block mb-2 text-sm font-medium text-gray-900">Blog Tags</label>
+                                    <SfMultiSelect TValue="List<string>" @bind-Value="@SelectedBlogTags" TItem="string" Placeholder="Blog Tags" DataSource="@BlogTags" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                        <MultiSelectFieldSettings></MultiSelectFieldSettings>
+                                    </SfMultiSelect>
+                                </div>
+
+                                if (SelectedBlogTags == null && !SelectedBlogTags.Any())
+                                {
+                                    tagIds.Value = "";
+                                }
+                                else
+                                {
+                                    tagIds.Value = String.Join(",", SelectedBlogTags);
+
+                                }
+
+                                <div class="mb-2">
+                                    <label for="" class="block mb-2 text-sm font-medium text-gray-900">Blog Divisions</label>
+                                    <SfMultiSelect TValue="List<string>" @bind-Value="@SelectedBlogDivision" TItem="string" Placeholder="Blog Divisions" DataSource="@BlogDivision" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                        <MultiSelectFieldSettings></MultiSelectFieldSettings>
+                                    </SfMultiSelect>
+                                </div>
+
+                                if (SelectedBlogDivision == null && !SelectedBlogDivision.Any())
+                                {
+                                    divisionIds.Value = "";
+
+                                }
+                                else
+                                {
+                                    divisionIds.Value = String.Join(",", SelectedBlogDivision);
+
+                                }
+
+                                <div class="mb-2">
+                                    <label for="" class="block mb-2 text-sm font-medium text-gray-900">Blog Discipline</label>
+                                    <SfMultiSelect TValue="List<string>" @bind-Value="@SelectedBlogDiscipline" TItem="string" Placeholder="Blog Divisions" DataSource="@BlogDiscipline" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                        <MultiSelectFieldSettings></MultiSelectFieldSettings>
+                                    </SfMultiSelect>
+                                </div>
+
+                                if (SelectedBlogDiscipline == null && !SelectedBlogDiscipline.Any())
+                                {
+                                    disciplineIds.Value = "";
+                                }
+                                else
+                                {
+                                    disciplineIds.Value = String.Join(",", SelectedBlogDiscipline);
+                                }
+
+                            }
+
+                            else if (currentComponent.ComponentType == "Sponsors")
+                            {
+                                <h3>Sponsors</h3>
+
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "AvatarUrl", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "Name", Value = "" });
+                                }
+
+                                ComponentPropertyModel avatarUrl = currentComponent.componentProperties.Where(x => x.Key == "AvatarUrl").FirstOrDefault();
+                                ComponentPropertyModel name = currentComponent.componentProperties.Where(x => x.Key == "Name").FirstOrDefault();
+
+                                <div class="p-4">
+
+                                    <div class="flex justify-start items-center m-2">
+                                        <!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
+                                        <svg fill="#d1d1d1" height="13px" width="13px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 455.00 455.00" xml:space="preserve" stroke="#d1d1d1" stroke-width="0.00455">
+
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+
+                                        <g id="SVGRepo_iconCarrier"> <path d="M0,0v455h455V0H0z M259.405,80c17.949,0,32.5,14.551,32.5,32.5s-14.551,32.5-32.5,32.5s-32.5-14.551-32.5-32.5 S241.456,80,259.405,80z M375,375H80v-65.556l83.142-87.725l96.263,68.792l69.233-40.271L375,299.158V375z" /> </g>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </svg>
+                                        <input type="text" @bind="avatarUrl.Value" @bind:event="oninput" placeholder="@(( avatarUrl.Value != "" ) ? avatarUrl.Value : "Paste image URL Here")" class="w-100 border-0 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" role="combobox" aria-expanded="false" aria-controls="options">
+                                    </div>
+                                    <div>
+                                        <label for="sponsorTitle" class="block mb-2 text-sm font-medium text-gray-900">Blog Title</label>
+                                        <input @bind="  name.Value" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " id="sponsorTitle"></input>
+                                    </div>
+                                    <hr class="my-3" />
+                                    @* <InputFile accept="image/*" maxFileSize="10485760" OnChange="ImageFileUploadHandle" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" /> *@
+                                    <div class="flex justify-center align-center mt-4 mx-auto" style="width:150px; height : 150px;">
+                                        <img src="@avatarUrl.Value" class="object-contain" />
+                                    </div>
+
+                                </div>
+
+                            }
+                            else if (currentComponent.ComponentType == "Honoree")
+                            {
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "Name", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "Description", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "Role", Value = "" });
+                                }
+                                ComponentPropertyModel Name = currentComponent.componentProperties.Where(x => x.Key == "Name").FirstOrDefault();
+                                ComponentPropertyModel Description = currentComponent.componentProperties.Where(x => x.Key == "Description").FirstOrDefault();
+                                ComponentPropertyModel Role = currentComponent.componentProperties.Where(x => x.Key == "Role").FirstOrDefault();
+
+                                <h3>Honor Board</h3>
+                                <div class="my-2"><hr /></div>
+
+
+                                <div class="relative m-2">
+                                    <svg class="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+                                    </svg>
+                                    <input type="text" @bind="searchTerm" @bind:event="oninput" placeholder="@(( Name.Value != "" ) ? Name.Value : "Search...")" class="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" role="combobox" aria-expanded="false" aria-controls="options">
+                                </div>
+                                @if (!string.IsNullOrEmpty(searchTerm) && filteredHonoreeItems.Any())
+                                {
+                                    @foreach (var item in filteredHonoreeItems)
+                                    {
+                                        <p @onclick="() => {selectItemHonoree(item); Name.Value = item.Name;}">@item.Name</p>
+                                    }
+                                }
+                                <div>
+                                    <div class="mt-4">
+                                        <label for="role" class="block text-sm font-medium leading-6 text-gray-900">Role</label>
+                                        <div class="mt-2">
+                                            <input type="text" @bind="Role.Value" id="role" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter role" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="comment" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                                        <div class="mt-2">
+                                            <textarea maxlength="250" @bind="Description.Value" rows="4" name="comment" id="comment" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                                            <span class="text-sm font-italic text-muted">Max length is 250 characters</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else if (currentComponent.ComponentType == "Honorees")
+                            {
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "Name", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "Description", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "AvatarImageUrl", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "PhoneNumber", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "EmailAddress", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "RolesData", Value = "" });
+                                }
+                                ComponentPropertyModel Name = currentComponent.componentProperties.Where(x => x.Key == "Name").FirstOrDefault();
+                                ComponentPropertyModel Description = currentComponent.componentProperties.Where(x => x.Key == "Description").FirstOrDefault();
+                                ComponentPropertyModel AvatarImageUrl = currentComponent.componentProperties.Where(x => x.Key == "AvatarImageUrl").FirstOrDefault();
+                                ComponentPropertyModel PhoneNumber = currentComponent.componentProperties.Where(x => x.Key == "PhoneNumber").FirstOrDefault();
+                                ComponentPropertyModel EmailAddress = currentComponent.componentProperties.Where(x => x.Key == "EmailAddress").FirstOrDefault();
+                                ComponentPropertyModel RolesData = currentComponent.componentProperties.Where(x => x.Key == "RolesData").FirstOrDefault();
+                                List<Role> rolesData = new List<Role>();
+                                if (RolesData.Value != null && RolesData.Value != "")
+                                    rolesData = JsonConvert.DeserializeObject<List<Role>>(RolesData.Value);
+
+                                <div class="mt-4">
+                                    @* <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Name</label> *@
+                                    <div class="mt-2">
+                                        <input type="text" @bind="Name.Value" id="name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter name" />
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    @* <label for="avatar" class="block text-sm font-medium leading-6 text-gray-900">Avatar Image URL</label> *@
+                                    <div class="mt-2">
+                                        <input type="url" @bind="AvatarImageUrl.Value" id="avatar" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter image URL" />
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    @* <label for="phone" class="block text-sm font-medium leading-6 text-gray-900">Phone Number</label> *@
+                                    <div class="mt-2">
+                                        <input type="tel" @bind="PhoneNumber.Value" id="phone" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter phone number" />
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    @* <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email Address</label> *@
+                                    <div class="mt-2">
+                                        <input type="email" @bind="EmailAddress.Value" id="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter email address" />
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    @* <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description</label> *@
+                                    <div class="mt-2">
+                                        <textarea maxlength="250" rows="4" name="description" @bind="Description.Value" id="description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter description"></textarea>
+                                        <span class="text-sm font-italic text-muted">Max length is 250 characters</span>
+                                    </div>
+                                </div>
+
+                                if (rolesData != null)
+                                {
+                                    @foreach (var role in rolesData)
+                                    {
+                                        <div class="mt-4">
+                                            @* <label for="role" class="block text-sm font-medium leading-6 text-gray-900">Role</label> *@
+                                            <div class="mt-2">
+                                                <input type="text" @bind="role.RoleName" id="role" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter role" />
+                                            </div>
+
+                                            @* <label for="startDate" class="block text-sm font-medium leading-6 text-gray-900">Start Date</label> *@
+                                            <div class="mt-2">
+                                                <input type="date" @bind="role.StartDate" id="startDate" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            </div>
+
+                                            @* <label for="endDate" class="block text-sm font-medium leading-6 text-gray-900">End Date</label> *@
+                                            <div class="mt-2">
+                                                <input type="date" @bind="role.EndDate" id="endDate" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                                if (tempRole != null)
+                                {
+                                    <div class="mt-4">
+                                        @* <label for="role" class="block text-sm font-medium leading-6 text-gray-900">Role</label> *@
+                                        <div class="mt-2">
+                                            <input type="text" @bind="tempRole.RoleName" id="role" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter role" />
+                                        </div>
+
+                                        @* <label for="startDate" class="block text-sm font-medium leading-6 text-gray-900">Start Date</label> *@
+                                        <div class="mt-2">
+                                            <input type="date" @bind="tempRole.StartDate" id="startDate" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                        </div>
+
+                                        @* <label for="endDate" class="block text-sm font-medium leading-6 text-gray-900">End Date</label> *@
+                                        <div class="mt-2">
+                                            <input type="date" @bind="tempRole.EndDate" id="endDate" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="mt-4">
+                                    @* <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description</label> *@
+                                    <div class="mt-2">
+                                        <button class="bg-blue-400 rounded inline-flex items-center mt-4 p-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500" @onclick="() => SaveRoles(RolesData, tempRole, rolesData)">
+                                            Save roles
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+
+                            else if (currentComponent.ComponentType == "FileShare")
+                            {
+
+
+                                <h3>File Sharing</h3>
+
+                                if (!currentComponent.componentProperties.Any())
+                                {
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "fileName", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "SelectedFileDetailsjson", Value = "" });
+                                    @* currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "fileSize", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "dateModified", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "dateCreated", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "hasChild", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "isFile", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "type", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "id", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "filterPath", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "filterId", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "parentId", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "caseSensitive", Value = "" });
+                                    currentComponent.componentProperties.Add(new ComponentPropertyModel { ComponentId = currentComponent.ComponentId, Key = "showHiddenItems", Value = "" }); *@
+                                }
+
+                                ComponentPropertyModel fileName = currentComponent.componentProperties.Where(x => x.Key == "fileName").FirstOrDefault();
+                                ComponentPropertyModel SelectedFileDetails = currentComponent.componentProperties.Where(x => x.Key == "SelectedFileDetailsjson").FirstOrDefault();
+                                @*    ComponentPropertyModel fileSize = currentComponent.componentProperties.Where(x => x.Key == "fileSize").FirstOrDefault();
+                                ComponentPropertyModel dateModified = currentComponent.componentProperties.Where(x => x.Key == "dateModified").FirstOrDefault();
+                                ComponentPropertyModel dateCreated = currentComponent.componentProperties.Where(x => x.Key == "dateCreated").FirstOrDefault();
+                                ComponentPropertyModel hasChild = currentComponent.componentProperties.Where(x => x.Key == "hasChild").FirstOrDefault();
+                                ComponentPropertyModel isFile = currentComponent.componentProperties.Where(x => x.Key == "isFile").FirstOrDefault();
+                                ComponentPropertyModel type = currentComponent.componentProperties.Where(x => x.Key == "type").FirstOrDefault();
+                                ComponentPropertyModel id = currentComponent.componentProperties.Where(x => x.Key == "id").FirstOrDefault();
+                                ComponentPropertyModel filterPath = currentComponent.componentProperties.Where(x => x.Key == "filterPath").FirstOrDefault();
+                                ComponentPropertyModel filterId = currentComponent.componentProperties.Where(x => x.Key == "filterId").FirstOrDefault();
+                                ComponentPropertyModel parentId = currentComponent.componentProperties.Where(x => x.Key == "parentId").FirstOrDefault();
+                                ComponentPropertyModel caseSensitive = currentComponent.componentProperties.Where(x => x.Key == "caseSensitive").FirstOrDefault();
+                                ComponentPropertyModel showHiddenItems = currentComponent.componentProperties.Where(x => x.Key == "showHiddenItems").FirstOrDefault(); *@
+                                fileName.Value = selectedFilePath;
+                                SelectedFileDetails.Value = SelectedFileDetailsjson;
+                                @* fileSize.Value = selectedFileName; *@
+
+                                <div class="container">
+                                    <SfFileManager TValue="FileManagerDirectoryContent" AllowDragAndDrop="false" AllowMultiSelection="false">
+                                        <FileManagerAjaxSettings Url="https://localhost:7114/api/FileManager/FileOperations"
+                                                                 UploadUrl="http://localhost:62869/api/SQLProvider/Upload"
+                                                                 DownloadUrl="https://localhost:7114/api/FileManager/Download"
+                                                                 GetImageUrl="https://localhost:7114/api/FileManager/GetImage">
+                                        </FileManagerAjaxSettings>
+                                        <FileManagerUploadSettings MaxFileSize="5000000" AllowedExtensions=".pdf,.doc,.docx,.txt,.xls,.xlsx,.jpeg,.jpg,.png"></FileManagerUploadSettings>
+
+                                        <FileManagerContextMenuSettings File="@Items" Folder="@Items" Visible="false"></FileManagerContextMenuSettings>
+                                        <FileManagerToolbarSettings ToolbarItems="@MenuItems" Visible="false"></FileManagerToolbarSettings>
+                                        <FileManagerEvents TValue="FileManagerDirectoryContent" FileSelection="FileSelection"></FileManagerEvents>
+
+                                    </SfFileManager>
+                                </div>
+
+                                <h5>filePath @selectedFilePath </h5>
+                                @*   <h5>Selected file : @selectedFileName </h5> *@
+
+                                @* <div class="mt-4">
+            <h3 class="text-lg font-medium leading-6 text-gray-900">File Share</h3>
+            <div class="mt-2">
+            <input type="text" @bind="newFolderName" placeholder="Enter folder name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+            <button @onclick="CreateFolder" class="bg-blue-500 text-white rounded-md p-2 mt-2">Create Folder</button>
+            </div>
+
+            <div class="mt-4">
+            <h4 class="font-semibold text-gray-700">Folders</h4>
+            <ul>
+            @foreach (var folder in folders)
+            {
+            <li>
+            <button @onclick="() => SelectFolder(folder)" class="folder-button">@folder.Name</button>
+            @* <button @onclick="() => DeleteFolder(folder)" class="ml-2 text-red-500 hover:text-red-700">❌</button>
+            </li>
+            }
+            </ul>
+            </div>
+
+            @if (selectedFolder != null)
+            {
+            <div class="mt-4">
+            <h4 class="font-semibold text-gray-700">Selected Folder: @selectedFolder.Name</h4>
+
+            <div class="mt-2">
+            <InputFile OnChange="UploadFile" />
+            <button @onclick="SaveFile" class="bg-green-500 text-white rounded-md p-2 mt-2">Upload File</button>
+            </div>
+
+            <div class="mt-4">
+            <h4 class="font-semibold text-gray-700">Files in @selectedFolder.Name</h4>
+            <ul>
+            @foreach (var file in selectedFolder.Files)
+            {
+            <li>
+            <a href="@file.Path" target="_blank" class="text-blue-500 underline">@file.Name</a>
+            <button @onclick="() => RemoveFile(file)" class="ml-2 text-red-500 hover:text-red-700">❌</button>
+            </li>
+            }
+            </ul>
+            </div>
+            </div>
+            }
+            </div>
+            *@
+                            }
+
+                            <button @onclick='()=>{ModifyComponent(currentComponent);component.ShowPopup = false;}' class="bg-blue-400 rounded inline-flex items-center mt-2 p-2 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                                @if (component.componentProperties.Count() == 0)
+                                {
+                                    <span>Add Data</span>
+                                }
+                                else
+                                {
+                                    <span>Update Data</span>
+                                }
+                            </button>
+                            <button @onclick='()=>{ component.ShowPopup = false; currentComponent = new Models.Component();FetchRows();}' class="bg-blue-400 rounded inline-flex items-center mt-2 p-2 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+}
+
+@if (isMenuMapped)
+{
+    <div class="relative z-10 p-4" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-gray-100 bg-opacity-25 transition-opacity"></div>
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
+            <div class="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl p-4 ring-1 ring-black ring-opacity-5 transition-all">
+                The current choosen menu item @selectedMenuName already mapped to @existedPage.PageTitle, would like to proceed?
+                <div class="mt-2 text-center">
+                    <button type="button" class="btn btn-primary" @onclick="()=>{CreatePage();}">Ok</button>
+                    <button type="button" class="btn btn-danger" @onclick="() => {isMenuMapped = false;existedPage = new(); } ">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (!isResourcePathExists)
+{
+    <div class="relative z-10 p-4" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-gray-100 bg-opacity-25 transition-opacity"></div>
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
+            <div class="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl p-4 ring-1 ring-black ring-opacity-5 transition-all">
+                The resource path <b>@formData.ResourcePath</b> already exists. Please choose a new one.
+                <div class="mt-2 text-center">
+                    <button type="button" class="btn btn-primary" @onclick="()=>{isResourcePathExists =true;  }">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@* ******************************
+    From Database ends here
+****************************** *@
+
+
+
+
+
+
+

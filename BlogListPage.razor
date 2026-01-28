@@ -1,0 +1,126 @@
+﻿@page "/bloglist"
+
+<h2 class="text-2xl font-semibold">Blog List</h2>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+    @foreach (var post in BlogService.GetBlogPosts())
+    {
+        <div class="bg-white shadow-md rounded-lg p-4">
+            @if (!string.IsNullOrEmpty(post.HeaderImage))
+            {
+                <img src="@post.HeaderImage" alt="Header Image" class="h-32 w-full object-cover rounded-md mb-2" />
+            }
+            <h3 class="text-lg font-semibold">@post.Title</h3>
+            <p class="text-gray-600 mt-1">@post.Content</p>
+            <div class="mt-2">
+                <span class="text-sm font-medium">@post.Tagging</span>
+                <span class="ml-2 text-xs text-gray-500">Division: @post.Division</span>
+                <span class="ml-2 text-xs text-gray-500">Category: @post.Category</span>
+            </div>
+            <div class="flex mt-4">
+                @* <button class="px-4 py-2 bg-blue-500 text-white rounded-md mr-2" @onclick="EditBlogPost">Edit</button>
+                <button class="px-4 py-2 bg-red-500 text-white rounded-md" @onclick="DeleteBlogPost">Delete</button> *@
+                <button class="px-4 py-2 bg-blue-500 text-white rounded-md mr-2" @onclick="() => EditBlogPost(post)">Edit</button>
+                <button class="px-4 py-2 bg-red-500 text-white rounded-md" @onclick="() => DeleteBlogPost(post)">Delete</button>
+                @* <a href="/BlogPage/@post.Id" class="btn btn-primary ">Edit<span class="sr-only">, @post.Id</span></a> *@
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+@* <h2 class="text-2xl font-semibold">Admin Blog List Page</h2>
+
+<div class="mt-8">
+    <!-- Display blog posts -->
+    <div>
+        @foreach (var post in BlogPosts)
+        {
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold">@post.Title</h3>
+                <p>@post.Content</p>
+            </div>
+        }
+    </div>
+</div> *@
+@* 
+<h2 class="text-2xl font-semibold">Admin Blog List Page</h2>
+
+<div class="mt-8">
+    <!-- Display blog posts -->
+    <div>
+        @foreach (var post in BlogService.GetBlogPosts())
+        {
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold">@post.Title</h3>
+                <p>@post.Content</p>
+                <p><strong>Tagging:</strong> @post.Tagging</p>
+                <p><strong>Division:</strong> @post.Division</p>
+                <p><strong>Category:</strong> @post.Category</p>
+                <img src="@post.HeaderImage" alt="Header Image" class="max-w-xs" />
+            </div>
+        }
+    </div>
+</div>
+
+<h2 class="text-2xl font-semibold">Admin Blog List Page</h2>
+
+<div class="mt-8">
+    <!-- Display blog posts -->
+    <div>
+        @foreach (var post in BlogService.GetBlogPosts())
+        {
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold">@post.Title</h3>
+                <p>@post.Content</p>
+            </div>
+        }
+        <div class="px-4 sm:px-6 lg:px-8">
+            <div class="sm:flex sm:items-center">
+                <div class="sm:flex-auto">
+                    <h1 class="text-base font-semibold leading-6 text-gray-900">Users</h1>
+                    <p class="mt-2 text-sm text-gray-700">A list of all the users in your account including their name, title, email and role.</p>
+                </div>
+                <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                    <button type="button" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"><a href="BlogPage">Add user</a></button>
+                </div>
+            </div>
+            <div class="-mx-4 mt-8 sm:-mx-0">
+                <table class="min-w-full divide-y divide-gray-300">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Title</th>
+                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Content</th>
+                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Email</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Role</th>
+                            <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                                <span class="sr-only">Edit</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 bg-white">
+                        
+                            @foreach (var post in BlogService.GetBlogPosts())
+                            {
+                            <tr>
+                                <div class="mb-6">
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">@post.Title</td>
+                                    <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:table-cell">@post.Content</td>
+                                    
+                                <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">, Lindsay Walton</span></a>
+                                </td>
+                                </div>
+                            </tr>
+                            }
+                        
+                        <!-- More people... -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div> *@
