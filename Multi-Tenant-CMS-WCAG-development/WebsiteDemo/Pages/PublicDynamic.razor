@@ -1,0 +1,56 @@
+﻿@page "/PublicDynamic/{TenantId}"  
+<Breadcrumbs CrumbPaths="PublicDynamic" />
+<div class="w-full">
+    <div class="flex flex-col" style="min-height:100vh">
+        <div id="home" style="display:block; font-family:@blog.ContentFontStyle" class="flex-grow">
+            <div class="w-full">
+                <img class="w-full" style="height:250px" src="@blog.Banner" />
+            </div>
+            <div class="w-full" style="height:10vh;">
+                <h4 class="text-2xl font-extrabold dark:text-white mx-8 my-1">@blog.Heading</h4>
+            </div>
+            <div class="w-auto overflow-auto" id="content" style="height:auto;color:@blog.ContentFontColor;font-size:@blog.ContentFontSize">
+
+                <p class="mx-8 my-1">@blog.TextContent</p>
+            </div>
+            <div id="contentId">
+                @foreach (var row in Data.Rows)
+                {
+                    <div class="p-4">
+                        <div class="@GetGridClass(row.containers.Count) grid gap-4 h-auto" id="container">
+                            @foreach (var div in row.containers)
+                            {
+                                <div class="border-1 border-light">
+                                    <TeamWithRoundImage />
+                                    @* <@div.PageComponent/> *@
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                @*   @foreach (var row in Data.Rows)
+                {
+                <div id="contentId">
+                <div class="grid @GridClass gap-4 grid-cols-3" id="container" style="min-height:20vh">
+                @foreach (var item in row.containers)
+                {
+                @item.PageComponent
+                }
+
+                </div>
+                </div>
+                } *@
+                @*    <div class="grid @GridClass gap-4 grid-cols-3" id="container" style="min-height:20vh">
+
+
+                @foreach (var item in ImagesData)
+                {
+                <div class="p-1 rounded"><img src="@item.ImageUrl" class="w-full"><p>@item.Text</p></div>
+                }
+
+                </div> *@
+            </div>
+        </div>
+
+    </div>
+</div>

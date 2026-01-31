@@ -1,0 +1,68 @@
+﻿@page "/Templates/{TenantId}"
+
+@using AssociationEntities.Models;
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Cards
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Inputs
+@inject Microsoft.AspNetCore.Components.NavigationManager UriHelper
+
+
+<div class="grid grid-cols-3 gap-4 p-5">
+    @{
+        var cardDetails = Blogs.Skip(SkipValue).Take(TakeValue).ToList();
+        @foreach (Blog card in cardDetails)
+        {
+            <div class="w-100">
+                    @* HEADER *@
+                <div class="h-16 flex justify-content-between" style="background-color: @card.HeaderBackgroundColor;font-family: @card.HeaderFontStyle;">
+                        <div class="h-16 w-16 px-2 flex justify-content-center items-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Vanamo_Logo.png" class="rounded-full" style="    padding-left: 14px;" />
+                        <span></span>
+                            <h1 style="color: @card.HeaderFontColor">ABC</h1>
+                        </div>
+                        <div class="px-2 flex items-center">
+                        <ul class="flex" style="font-size: @fontSize; color: @card.MainMenuColor; font-family: @card.MainMenuFontStyle">
+                                <li class="px-1">Home</li>
+                                <li class="px-1">About</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    @* CONTENT *@
+                    <div class="h-60 flex justify-center items-center px-2" style="color: @card.ContentFontColor;font-family:@card.ContentFontStyle; font-size: @fontSize; text-align: justify">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                    </div>
+
+                    @* FOOTER *@
+                    <div class="h-16 flex justify-between items-center px-2" style="background-color: @card.FooterBackgroundColor; font-family:@card.FooterFontStyle">
+                        <p style="color:@card.FooterFontColor">Copyright 2024</p>
+                        <div class="">
+                        <a class="bg-blue-500 text-white px-4 py-1 border rounded" href="/customize/@TenantId/@card.BlogId">Edit</a>
+                        </div>
+                    </div>
+
+            </div>
+        }
+    }
+</div>
+
+<div class="pager-container">
+    <SfPager @ref="@Page" PageSize=@pageSize ShowAllInPageSizes=true TotalItemsCount=@TotalCount PageSizes=@pagesizes ItemClick="HandleNumericClick" PageSizeChanging="Change">
+    </SfPager>
+</div>
+
+<style>
+
+
+
+
+</style>
+
+@code {
+
+  
+}

@@ -1,0 +1,62 @@
+﻿@page "/breadcrumbs"
+@page "/breadcrumbs/{*crumbPaths}"
+
+<ul class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    @foreach (var crumb in breadcrumbs)
+    {
+        <li class="breadcrumb-item">
+            @if (crumb.Link != null)
+            {
+                <a href="@crumb.Link">@crumb.Text</a>
+            }
+            else
+            {
+                @crumb.Text
+            }
+        </li>
+    }
+</ul>
+
+@code {
+    private List<Crumb> breadcrumbs;
+
+    [Parameter]
+    public string CrumbPaths { get; set; }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(CrumbPaths))
+        {
+            breadcrumbs = CreateBreadcrumbs(CrumbPaths);
+            if (breadcrumbs == null)
+            {
+                breadcrumbs = new List<Crumb>();
+            }
+        }
+    }
+
+    private List<Crumb> CreateBreadcrumbs(string crumbPaths)
+    {
+        var pathSegments = crumbPaths.Split('/');
+        var currentPath = "/";
+        var result = new List<Crumb>();
+
+        foreach (var segment in pathSegments)
+        {
+            if (!string.IsNullOrEmpty(segment))
+            {
+                currentPath = $"{currentPath}{segment}/";
+                result.Add(new Crumb { Text = segment, Link = currentPath });
+            }
+        }
+
+        return result;
+    }
+
+    private class Crumb
+    {
+        public string Text { get; set; }
+        public string Link { get; set; }
+    }
+}

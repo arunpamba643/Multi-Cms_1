@@ -1,0 +1,39 @@
+﻿
+@using AssociationEntities.Models;
+ <!-- ActionButtons.razor -->
+<div class="w-100 p-1 flex justify-between">
+    <button @onclick="SettingsClicked" class="action-button bg-blue-400 rounded inline-flex items-center mt-2 p-1 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Settings</button>
+    <button type="button" @onclick="RemoveClicked" class="@ButtonClass row.Containers.Count">Remove</button>
+</div>
+
+@code {
+
+
+
+    [Parameter]
+    public EventCallback<Component> OnSettingsClicked { get; set; }
+
+    [Parameter]
+    public EventCallback<Component> OnRemoveClicked { get; set; }
+
+    [Parameter]
+    public string ButtonClass { get; set; } = ""; // Add any default classes if needed
+
+    [Parameter]
+    public Row row { get; set; } // Assuming Row type is available
+
+    [Parameter]
+    public Component component { get; set; } // Assuming Component type is available
+
+    private async Task SettingsClicked()
+    {
+        if (OnSettingsClicked.HasDelegate)
+            await OnSettingsClicked.InvokeAsync(component);
+    }
+
+    private async Task RemoveClicked()
+    {
+        if (OnRemoveClicked.HasDelegate)
+            await OnRemoveClicked.InvokeAsync(component);
+    }
+}

@@ -1,0 +1,608 @@
+﻿@inject NavigationManager NavigationManager
+@inject SharedService sharedService
+@inject HonorSharedService honorSharedService
+@using AssociationEntities.Models;
+@using Newtonsoft.Json
+@using WebsiteDemo.Models
+@using WebsiteDemo.Components;
+@using Services
+
+@* @page "/" *@
+@page "/Content/{TenantId}"
+@page "/Content/{TenantId}/{MenuName?}/{ResourcePath?}"
+@page "/Content/{TenantId}/{ParentMenu?}/{MenuName?}/{ResourcePath?}"
+@page "/Content/{TenantId}/{ParentMenu?}/{MenuName?}/{ChildMenu?}/{ResourcePath?}"
+
+
+@*  @page "/{TenantId}/{ResourcePath?}" *@
+
+
+<style>
+    .line-clamp-1 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        /* For Firefox */
+        display: -moz-box;
+        -moz-box-orient: vertical;
+        max-height: calc(1.5em * 3); /* Adjust based on line height */
+        white-space: nowrap; /* Prevents wrapping of text */
+        text-overflow: ellipsis; /* Adds ellipsis for overflow */
+    }
+
+    .line-clamp-2 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        /* For Firefox */
+        display: -moz-box;
+        -moz-box-orient: vertical;
+        max-height: calc(1.5em * 3); /* Adjust based on line height */
+        white-space: nowrap; /* Prevents wrapping of text */
+        text-overflow: ellipsis; /* Adds ellipsis for overflow */
+    }
+
+    .line-clamp-3 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        /* For Firefox */
+        display: -moz-box;
+        -moz-box-orient: vertical;
+        max-height: calc(1.5em * 3); /* Adjust based on line height */
+        white-space: nowrap; /* Prevents wrapping of text */
+        text-overflow: ellipsis; /* Adds ellipsis for overflow */
+    }
+
+    .container-blog {
+        height: 200px;
+    @* //border: 1px solid red; *@
+    }
+
+    .event-container {
+        border-radius: 10px;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        background-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgb(6 6 6 / 64%) 100%), url(https://res.cloudinary.com/dzax35hss/image/upload/v1707464251/cld-sample-3.jpg);
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .info {
+        color: white;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .event-title {
+        width: 100%;
+        margin: 0 0 .5rem 0;
+        font-size: 150%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+
+    .height-300 {
+        max-height: 300px;
+    }
+
+    .gallery-image {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        max-height: 100%;
+        border-radius: 8px;
+        transition: transform 0.2s;
+    }
+
+        .gallery-image:hover {
+            transform: scale(1.05);
+        }
+</style>
+
+@code {
+    string uri = "";
+    protected async override Task OnParametersSetAsync()
+    {
+
+        base.OnParametersSet();
+        await GetPageId();
+        await FetchRows();
+        uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).AbsolutePath.ToString().Split("11")[1];
+
+
+    }
+}
+
+<nav class="flex px-5 py-3 text-gray-700 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
+    <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+        <li class="inline-flex items-center">
+            <a href="content/11" class="inline-flex items-center font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+                </svg>
+                Home
+            </a>
+        </li>
+        @foreach (var crumb in breadcrumbs)
+        {
+            <li>
+                @if (crumb.Link != null)
+                {
+
+
+                    <div class="flex items-center">
+                        <svg class="rtl:rotate-180 block w-3 h-3 mx-1 text-gray-400 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                        </svg>
+                        <a href="@crumb.Link" class="ms-1 font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">@crumb.Text.Replace("%20", "")</a>
+                    </div>
+
+                }
+                else
+                {
+                    @crumb.Text
+                }
+            </li>
+        }
+    </ol>
+</nav>
+
+
+@* <Breadcrumbs CrumbPaths="@uri" /> *@
+
+<div class="flex justify-between items-start">
+    <style>
+        @GetFontSizeStyle()
+    </style>
+    <div class="d-none d-lg-block" style="width:120px;height:728px;margin:.5rem;">
+        <img src="https://res.cloudinary.com/dzax35hss/image/upload/v1715155420/Untitled_design_5_lnjgxh.png" style="max-width:100%">
+    </div>
+    <div id="rows" class="w-full lg:w-10/12 custom-rows">
+        @* Showing existing rows, containers, components  *@
+        @foreach (var row in rows)
+        {
+            <div class="mt-2 p-0">
+
+                @if (row.Containers.Count == 0)
+                {
+                    <div style="width:100%;height:10rem;" class="my-3">
+                    </div>
+                }
+
+                @if (row.Containers.Count != 0)
+                {
+                    @foreach (var container in row.Containers)
+                    {
+                        int NoofContainers = container.NoofContainers;
+
+                        @if (NoofContainers > 0)
+                        {
+                            <div class="@GetGridClass(NoofContainers) grid gap-4 h-auto px-5 py-3 custom-row">
+
+                                @{
+                                    int componentCount = 1;
+                                }
+
+                                @foreach (var component in container.Components)
+                                {
+
+
+                                    @if (component.ComponentId > 0 && component.OrderNumber == componentCount && component.ComponentProperties.Count > 0)
+                                    {
+                                        if (component.ComponentType == "ContactPerson")
+                                        {
+                                            Contact selectedItem = new Contact();
+                                            selectedItem.Name = component.ComponentProperties.Where(x => x.Key == "Name").FirstOrDefault().Value;
+                                            selectedItem.PhoneNumber = component.ComponentProperties.Where(x => x.Key == "PhoneNumber").FirstOrDefault().Value;
+                                            selectedItem.EmailAddress = component.ComponentProperties.Where(x => x.Key == "EmailAddress").FirstOrDefault().Value;
+                                            selectedItem.AvatarImageUrl = component.ComponentProperties.Where(x => x.Key == "AvatarImageUrl").FirstOrDefault().Value;
+                                            string Description = component.ComponentProperties.Where(x => x.Key == "Description").FirstOrDefault().Value;
+
+
+                                            <div class="p-3 flex flex-col justify-center items-center w-100 rounded-2xl shadow-xl component dark:text-white">
+                                                <img src="@selectedItem.AvatarImageUrl" class="contact-person-profile-image" />
+                                                <h5 class="mt-3 font-bold"> @selectedItem.Name </h5>
+                                                <p class="line-clamp-2 text-ellipsis mt-2 text-gray-800 dark:text-white text-center">
+                                                    @Description
+                                                </p>
+                                                <div class="flex flex-wrap justify-center mt-2 ">
+                                                    <p class="mt-1 mr-2">
+                                                        <i class="fas fa-phone"></i>
+                                                        @selectedItem.PhoneNumber
+                                                    </p>
+                                                    <p class="mt-1 overflow-hidden">
+                                                        <i class="far fa-envelope"></i>
+                                                        @selectedItem.EmailAddress
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                        }
+
+                                        else if (component.ComponentType == "EventDetail")
+                                        {
+                                            EventModel Events = new EventModel();
+                                            Events.EventName = component.ComponentProperties.Where(x => x.Key == "EventName").FirstOrDefault().Value;
+                                            Events.CreatorName = component.ComponentProperties.Where(x => x.Key == "CreatorName").FirstOrDefault().Value;
+                                            Events.EventStartTime = DateTime.Parse(component.ComponentProperties.Where(x => x.Key == "EventStartTime").FirstOrDefault().Value);
+                                            Events.EventType = component.ComponentProperties.Where(x => x.Key == "EventType").FirstOrDefault().Value;
+
+
+                                            <div class="flex flex-col justify-center items-start w-100 rounded-2xl shadow-xl component">
+                                                <div class="h-36 overflow-hidden">
+                                                    <img src="https://res.cloudinary.com/dzax35hss/image/upload/v1707464251/cld-sample-3.jpg" class="block">
+                                                </div>
+                                                <div class="p-3 w-full	">
+                                                    <h4 class="font-extrabold line-clamp-1 text-ellipsis">
+                                                        @Events.EventName
+                                                    </h4>
+                                                    <h6 class="text-gray-500  mt-1">
+                                                        <i class="fas fa-calendar-alt"></i>
+                                                        @Events.EventStartTime.ToString("MM/dd/yyyy")
+                                                    </h6>
+                                                    <p class="mt-2 line-clamp-2 text-ellipsis">
+                                                        @((MarkupString)Events.EventDescription)
+                                                    </p>
+                                                    <div class="flex justify-between items-center mt-1 flex-wrap">
+                                                        <span class="text-sm bg-gray-800 px-2 rounded-3xl text-white block mt-1">@Events.EventType</span>
+                                                        <div class="text-gray-500 text-sm mt-1">
+                                                            <i class="fas fa-user-circle"></i>
+                                                            @Events.CreatorName
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        }
+                                        else if (component.ComponentType == "BlogDetail")
+                                        {
+                                            string BlogId = GetValueOrDefault(component, "BlogId");
+
+                                            BlogPagesModel Blog = GetBlogDetailsById(BlogId);
+
+
+
+                                            <div class="flex flex-col justify-center items-start w-100 rounded-2xl shadow-xl component">
+                                                <div class="h-36 overflow-hidden">
+                                                    <img src="@Blog.HeaderImage" class="block">
+                                                </div>
+                                                <div class="p-3 w-full">
+                                                    <h4 class="font-extrabold line-clamp-1 text-ellipsis">
+                                                        @Blog.Title
+                                                    </h4>
+                                                    <h6 class="text-gray-500  mt-1">
+                                                        <i class="fas fa-history"></i>
+                                                        Posted on
+                                                        @Blog.CreatedAt
+                                                    </h6>
+                                                    <p class="mt-2 line-clamp-2 text-ellipsis">
+                                                        @((MarkupString)Blog.Description)
+                                                    </p>
+                                                    <div class="flex justify-end items-center mt-1 flex-wrap">
+
+                                                        <div class="text-gray-500 text-sm mt-1">
+                                                            <i class="fas fa-user-circle"></i>
+                                                            The Author
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                        }
+                                        else if (component.ComponentType == "FreeText")
+                                        {
+                                            string text = component.ComponentProperties.Where(x => x.Key == "Text").FirstOrDefault().Value;
+                                            <div class="p-2 component">
+
+                                                <div class="flex flex-column justify-between align-center">
+                                                    <p class="text-justify indent-8 p-2">
+                                                        @text
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (component.ComponentType == "BlankSpace")
+                                        {
+                                            string Height = component.ComponentProperties.Where(x => x.Key == "Height").Select(x => x.Value).FirstOrDefault() ?? "150px";
+                                            string Width = component.ComponentProperties.Where(x => x.Key == "Width").Select(x => x.Value).FirstOrDefault() ?? "100%";
+                                            <div class="p-2 component">
+
+                                                <div class="flex flex-column justify-between align-center">
+                                                    <div style="min-height: @Height; width : @Width;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (component.ComponentType == "Image")
+                                        {
+                                            string image = component.ComponentProperties.Where(x => x.Key == "image").Select(x => x.Value).FirstOrDefault() ?? "";
+                                            <div class="p-2 component">
+                                                <div class="flex h-52 justify-center overflow-hidden rounded-lg border border-b-slate-600 align-middle">
+                                                    <img src="@image" class="object-contain" />
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (component.ComponentType == "HTMLEditor")
+
+                                        {
+                                            string HTMLContent = component.ComponentProperties.Where(x => x.Key == "HTMLContent").Select(x => x.Value).FirstOrDefault() ?? "";
+                                            <div class="p-2 component">
+
+                                                <div class="flex flex-column justify-between align-center">
+                                                    <p class="text-justify indent-8 p-2">
+                                                        @((MarkupString)HTMLContent)
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        else if (component.ComponentType == "EventList")
+                                        {
+
+                                            string divisionIds = component.ComponentProperties.Where(x => x.Key == "divisionIds").Select(x => x.Value).FirstOrDefault() ?? "";
+                                            string disciplineIds = component.ComponentProperties.Where(x => x.Key == "disciplineIds").Select(x => x.Value).FirstOrDefault() ?? "";
+                                            string tagIds = component.ComponentProperties.Where(x => x.Key == "tagIds").Select(x => x.Value).FirstOrDefault() ?? "";
+                                            string creatorIds = component.ComponentProperties.Where(x => x.Key == "creatorIds").Select(x => x.Value).FirstOrDefault() ?? "";
+
+                                            AssociationEntities.CustomModels.EventFilters eventFilters = new AssociationEntities.CustomModels.EventFilters();
+
+                                            eventFilters.DivisionsIds.Add(divisionIds);
+                                            eventFilters.DisciplinesIds.Add(disciplineIds);
+                                            eventFilters.TagIds.Add(tagIds);
+
+
+                                            <EventList EventFilters="eventFilters"></EventList>
+
+                                        }
+
+                                        else if (component.ComponentType == "BlogList")
+                                        {
+
+                                            string divisionIds = GetValueOrDefault(component, "divisionIds");
+                                            string disciplineIds = GetValueOrDefault(component, "disciplineIds");
+                                            string tagIds = GetValueOrDefault(component, "tagIds");
+                                            string creatorIds = GetValueOrDefault(component, "creatorIds");
+
+                                            AssociationEntities.CustomModels.BlogFilters blogFilters = new AssociationEntities.CustomModels.BlogFilters
+                                        {
+                                            TenantId = Convert.ToInt32(tenantId),
+                                            DivisionsIds = divisionIds,
+                                            DisciplinesIds = disciplineIds,
+                                            TagIds = tagIds,
+                                        };
+
+
+                                            <BlogLists BlogFilters="blogFilters"></BlogLists>
+
+
+
+                                        }
+                                        else if (component.ComponentType == "Sponsors")
+                                        {
+                                            string avatarUrl = component.ComponentProperties.Where(x => x.Key == "AvatarUrl").Select(x => x.Value).FirstOrDefault() ?? "";
+                                            string name = component.ComponentProperties.Where(x => x.Key == "Name").Select(x => x.Value).FirstOrDefault() ?? "";
+
+                                            <div class="text-center component">
+                                                <img src="@avatarUrl" class="object-contain mx-auto" />
+                                                <small class="mt-2 text-gray-500">@name</small>
+                                            </div>
+                                        }
+                                        else if (component.ComponentType == "Honoree")
+                                        {
+                                            Honoree selectedItem = new Honoree
+                                        {
+                                            Name = GetValueOrDefault(component, "Name"),
+                                            PhoneNumber = GetValueOrDefault(component, "PhoneNumber"),
+                                            EmailAddress = GetValueOrDefault(component, "EmailAddress"),
+                                            AvatarImageUrl = GetValueOrDefault(component, "AvatarImageUrl"),
+                                            Role = GetValueOrDefault(component, "Role"),
+                                            Date = DateTime.Parse(GetValueOrDefault(component, "Date")),
+                                            Description = GetValueOrDefault(component, "Description")
+                                        };
+                                            honorSharedService.honoree = selectedItem;
+
+                                            <div class="height-300">
+                                                <div class="p-3 flex flex-col justify-center items-center w-100 rounded-2xl shadow-xl overflow-hidden">
+                                                    <img src="@selectedItem.AvatarImageUrl" class="contact-person-profile-image" />
+                                                    @*<h5 class="mt-3 font-bold text-lg"> @selectedItem.Name </h5>*@
+                                                    <div class="flex flex-wrap justify-center mt-2 ">
+                                                        <a class="mt-3 font-bold text-lg" href="/content/honor-details">
+                                                            <i class="fas fa-award"></i>
+                                                            @selectedItem.Name
+                                                        </a>
+                                                    </div>
+                                                    @* <p class="line-clamp-2 text-ellipsis text-sm mt-2 text-gray-800 text-center">
+                                                        @Description
+                                                    </p> *@
+                                                    <p class="mt-1 text-sm mr-2">
+                                                        @selectedItem.Date
+                                                    </p>
+                                                    <div class="flex flex-wrap justify-center mt-2 ">
+                                                        <p class="mt-1 text-sm mr-2">
+
+                                                            @selectedItem.Role
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (component.ComponentType == "ImageGallery")
+                                        {
+                                            imagesString = GetValueOrDefault(component, "images");
+                                            List<ImageData> urls = new List<ImageData>();
+                                            urls = JsonConvert.DeserializeObject<List<ImageData>>(imagesString);
+
+                                            <div class="p-2 component relative">
+                                                <div class="absolute top-2 left-2 bg-opacity-50 bg-gray-800 text-white p-2 rounded">
+                                                    <h2 class="text-lg font-bold">Book Event by tenant</h2>
+                                                </div>
+                                                <div class="flex h-52 justify-center overflow-hidden rounded-lg border border-b-slate-600 align-middle">
+                                                    <img src="@urls[0].ImageUrl" alt="Gallery Image" class="gallery-image" @onclick="() => NavigateToGalleryComponent(component)" />
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (component.ComponentType == "Honorees")
+                                        {
+                                            /* string honoreesDataString = GetValueOrDefault(component, "honoreesData");
+                                            var honoreesList = JsonConvert.DeserializeObject<List<Honoree>>(honoreesDataString);
+                                            Honoree selectedItem = honoreesList.FirstOrDefault(); */
+
+                                            Honoree selectedItem = new Honoree
+                                        {
+                                            Name = GetValueOrDefault(component, "Name"),
+                                            PhoneNumber = GetValueOrDefault(component, "PhoneNumber"),
+                                            EmailAddress = GetValueOrDefault(component, "EmailAddress"),
+                                            AvatarImageUrl = GetValueOrDefault(component, "AvatarImageUrl"),
+                                            Description = GetValueOrDefault(component, "Description"),
+                                        };
+                                            string roles = GetValueOrDefault(component, "RolesData");
+                                            var rolesList = JsonConvert.DeserializeObject<List<Role>>(roles);
+
+                                            <div class="height-300">
+                                                <div class="p-3 flex flex-col justify-center items-center w-100 rounded-2xl shadow-xl overflow-hidden">
+                                                    <img src="@selectedItem.AvatarImageUrl" class="contact-person-profile-image" />
+                                                    @*<h5 class="mt-3 font-bold text-lg"> @selectedItem.Name </h5>*@
+                                                    <div class="flex flex-wrap justify-center mt-2 ">
+                                                        <a class="mt-3 font-bold text-lg" href="/content/honor-details">
+                                                            <i class="fas fa-award"></i>
+                                                            @selectedItem.Name
+                                                        </a>
+                                                    </div>
+                                                    @* <p class="line-clamp-2 text-ellipsis text-sm mt-2 text-gray-800 text-center">
+                                                        @Description
+                                                    </p> *@
+                                                    <p class="mt-1 text-sm mr-2">
+                                                        @selectedItem.Date
+                                                    </p>
+                                                    <div class="flex flex-wrap justify-center mt-2 ">
+                                                        <p class="mt-1 text-sm mr-2">
+                                                            @rolesList[0].RoleName
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        else if (component.ComponentType == "FileShare")
+                                        {
+                                            /*  FileSharing selectedItem = new FileSharing
+                                            {
+                                            FilePath = GetValueOrDefault(component, "filePath"),
+                                            FileName = GetValueOrDefault(component, "fileName"),
+
+                                            };
+
+                                            <div style="box-shadow:0px 0px 0px 0px black;padding:1rem;">
+                                            <div class="text-center">
+                                            <img src="https://cdn-icons-png.freepik.com/512/2246/2246713.png" alt="@GetValueOrDefault(component, "fileName")" style="width:200px;margin: 0 auto;">
+                                            <h6> @GetValueOrDefault(component, "filePath")</h6>
+                                            <button type="button" class="mt-3 btn btn-block btn-primary fileDwnBtn" >Download File</button>
+                                            </div>
+                                            </div> */
+
+                                            FileSharing selectedItem = new FileSharing
+                                        {
+                                            FileName = GetValueOrDefault(component, "filePath"),
+                                            FileDetailsJson = GetValueOrDefault(component, "SelectedFileDetailsjson")
+                                        };
+
+                                            <div style="box-shadow:0px 0px 0px 0px black;padding:1rem;">
+                                                <div class="text-center">
+                                                    <img src="https://cdn-icons-png.freepik.com/512/2246/2246713.png" alt="@GetValueOrDefault(component, "fileName")" style="width:200px;margin: 0 auto;">
+                                                    <h6> @GetValueOrDefault(component, "fileName")</h6>
+                                                    <button type="button" class="mt-3 btn btn-block btn-primary fileDwnBtn" @onclick="() => { DownloadFile(selectedItem);}">Download File</button>
+                                                </div>
+                                            </div>
+
+
+                                        }
+
+                                    }
+                                    @* else
+                {
+                <div class="p-2 ">
+                <div class="flex flex-column justify-between align-center">
+                <div style="min-height: 10rem ; width : 100%;">
+                </div>
+                </div>
+                </div>
+                }
+                *@
+
+                                    componentCount++;
+
+
+                                }
+                            </div>
+                        }
+
+                    }
+                }
+            </div>
+        }
+    </div>
+    <div class="d-none d-lg-block" style="width:120px;height:728px;margin:.5rem;">
+        <img src="https://res.cloudinary.com/dzax35hss/image/upload/v1715158595/Untitled_design_6_fnwdnp.png" style="max-width:100%">
+    </div>
+</div>
+
+@code {
+    private string imagesString;
+    private string GetFontSizeStyle()
+    {
+        return $@"
+        p {{ font-size: {sharedService.FontSize}px; }}
+        h1, h2, h3, h4, h5, h6 {{ font-size: {sharedService.FontSizeHead}px; }}
+        time {{font-size: {sharedService.FontSize}px;}}";
+        //return $"font-size: {sharedService.FontSize}px;";
+    }
+
+    private void NavigateToGallery(string imagesPassed)
+    {
+        // Navigate to the gallery page, passing the images as a query string
+        //NavigationManager.NavigateTo($"/image-gallery?images={imagesString}");
+        var encodedImages = Uri.EscapeDataString(imagesPassed);
+        NavigationManager.NavigateTo($"/image-gallery?images={encodedImages}");
+    }
+
+    private void NavigateToGalleryComponent(Component component)
+    {
+        var retrivedImagesString = GetValueOrDefault(component, "images");
+        var encodedImages = Uri.EscapeDataString(retrivedImagesString);
+        NavigationManager.NavigateTo($"/image-gallery?images={encodedImages}");
+    }
+
+    protected override void OnInitialized()
+    {
+        sharedService.OnChange += StateHasChanged;
+        base.OnInitialized();
+    }
+
+    public void Dispose()
+    {
+        sharedService.OnChange -= StateHasChanged;
+    }
+
+    private void SelectHonor(Honoree honor)
+    {
+        honorSharedService.honoree = honor;
+        //NavigationManager.NavigateTo($"/honor-details");
+    }
+}
+
+

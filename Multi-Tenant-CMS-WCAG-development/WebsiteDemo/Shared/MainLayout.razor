@@ -1,0 +1,390 @@
+﻿@inherits LayoutComponentBase
+@page "/MainLayout"
+@page "/MainLayout/publicdynamic/{TenantId}"
+@page "/MainLayout/Content/{TenantId}"
+@page "/MainLayout/Content/{TenantId}/{MenuName?}/{ResourcePath?}"
+@page "/MainLayout/Content/{TenantId}/{ParentMenu?}/{MenuName?}/{ResourcePath?}"
+@page "/MainLayout/Content/{TenantId}/{ParentMenu?}/{MenuName?}/{ChildMenu?}/{ResourcePath?}"
+@inject Services.SharedService sharedService
+@using Blazored.LocalStorage
+@inject ILocalStorageService LocalStorage
+@using AssociationEntities.Models;
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .toggle-buttons {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .content {
+        max-width: 600px;
+        margin: 20px;
+    }
+
+    .light-theme {
+        background-color: #ffffff;
+        color: #0a0a0a;
+    }
+
+    .dark-theme {
+        background-color: #000000;
+        color: #ffffff;
+    }
+
+    .contrast-theme {
+        background-color: #cb3a3a;
+        color: #ffcc00;
+    }
+
+    button {
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        outline: none;
+        cursor: pointer;
+        transition: opacity 0.3s, background-color 0.3s, color 0.3s;
+    }
+
+    #darkButton {
+        background-color: #000000;
+        color: #ffffff;
+    }
+
+    #contrastButton {
+        background-color: #000000;
+        color: #ffcc00;
+    }
+
+    .active {
+        border: 2px solid #000;
+    }
+
+    .dim {
+        opacity: 0.5;
+    }
+
+    .high-contrast {
+        background-color: #ffeed1;
+        /* Add more styles as needed */
+    }
+
+    .dark {
+        background-color: black;
+        color: white;
+    }
+
+    .bg-gray-200 {
+        background-color: #E2E8F0; /* Light theme background color */
+    }
+
+    .second-nav {
+        margin-top: 33px; /* Adjust the value based on the height of your first nav */
+    }
+
+    .custom-color {
+        background-color: darkblue;
+    }
+
+    .bg-footer {
+        background-color: lavender;
+    }
+
+    .fixed-top {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+    }
+
+    .content-with-navbar {
+        padding-top: 50px; /* Adjust according to the height of your fixed top navbar */
+    }
+</style>
+
+<PageTitle>WebsiteDemo</PageTitle>
+
+
+<main class='@(toggleDark ? "dark" : null) @(toggleHighContrast ? "high-contrast" : null)'>
+    <div class="">
+<div class="flex flex-column justify-content-start">
+            <header class="content-with-navbar">
+                <nav class="fixed-top bg-gray-200 text-black shadow-md">
+                    <div class="flex justify-center items-center p-2 w-full">
+                        <ul class="flex space-x-4 pl-5 gap-4">
+                            <li><a class="text-lg font-semibold" href="#" @onclick="() => sharedService.AdjustFontSize(-1)">A-</a></li>
+                            <li><a class="text-lg font-semibold" href="#" @onclick="() => sharedService.ResetFontSize()">A</a></li>
+                            <li><a class="text-lg font-semibold" href="#" @onclick="() => sharedService.AdjustFontSize(1)">A+</a></li>
+                            <li class="flex gap-2">
+                                <img class="h-6 w-6" src="https://res.cloudinary.com/dzax35hss/image/upload/v1718855567/8665490_hands_asl_interpreting_icon_c9z4tv.png" alt="Easy Language" />
+                                <a href="easylanguage" class="text-lg font-semibold">Easy Language</a>
+                            </li>
+                            <li class="flex gap-2">
+                                <img class="h-6 w-6" src="https://res.cloudinary.com/dzax35hss/image/upload/v1718855567/8665489_hands_hand_icon_jia2ib.png" alt="Sign Language" />
+                                <a href="Signlanguage" class="text-lg font-semibold">Sign Language</a>
+                            </li>
+                            <li><button id="lightButton" class="active" @onclick="ChangeThemeToLight" style="border-radius: 50px; background-color: #ffd311; border-color: aliceblue; height: 25px;"></button></li>
+                            <li><button id="darkButton" @onclick="ChangeThemeToDark" style="border-radius: 50px; background-color: #010101; border-color: aliceblue; height: 25px;"></button></li>
+                            <li><button id="contrastButton" @onclick="AddContrastTheme" style="border-radius: 50px; background-color: #ffa7d1; border-color: aliceblue; height: 25px;"></button></li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <!-- Second Navbar -->
+                <nav class="bg-green-300" style="height: 10vh; display: flex; align-items:center; background-color: @blog.HeaderBackgroundColor; font-family: @blog.HeaderFontStyle;">
+                    <div class="lg:flex items-center container mx-auto">
+                        <div class="relative block flex justify-between items-center">
+                            <div class="p-4 lg:p-6 text-xl text-teal-600 font-bold flex items-center">
+                                <img src="@blog.Logo" class="w-10 rounded-full object-cover mx-2" />
+                                <h2 class="px-1 block text-gray-700 text-xxl font-bold mx-2">@blog.BrandName</h2>
+                            </div>
+                            <span style="font-size: 30px; cursor: pointer" class="px-4 py-2 rounded-md text-black lg:hidden" onclick="openNav()">&#9776;</span>
+                        </div>
+                        <div id="menu" class="flex items-center ml-auto lg:mt-0 hidden lg:block">
+                            <ul class="flex items-center">
+                                @foreach (var item in MenuData.Where(x => x.ParentMenuId == 0).OrderBy(x => x.Position))
+                                {
+                                    <li class="hoverable hover:bg-teal-700 hover:text-white">
+                                        <a href="@item.PageUrl" style="color: @blog.MainMenuColor; font-family: @blog.MainMenuFontStyle; font-size: @blog.MainMenuFontSize" class="relative block py-6 px-4 lg:text-sm lg:text-base font-bold hover:bg-teal-700 hover:text-black">@item.MenuName</a>
+                                        <div role="toggle" class="pt-3 mega-menu mb-16 sm:mb-0 shadow-xl bg-white">
+                                            <div class="container w-full flex flex-wrap mx-2 pb-3">
+                                                @foreach (var bin in MenuData.Where(x => x.ParentMenuId == item.MenuId).OrderBy(x => x.Position))
+                                                {
+                                                    <ul class="p-4 w-full sm:w-1/2 lg:w-1/6 pb-3">
+                                                        <a href="@bin.PageUrl" style="color: @blog.SubMenuColor; font-family: @blog.SubMenuFontStyle; font-size: @blog.SubMenuFontSize" class="font-bold text-xl text-bold mb-2">@bin.MenuName</a>
+                                                        @foreach (var sub in MenuData.Where(x => x.ParentMenuId == bin.MenuId).OrderBy(x => x.Position))
+                                                        {
+                                                            <li>
+                                                                <a href="@sub.PageUrl" style="color: @blog.SubChildMenuColor; font-family: @blog.SubChildFontStyle; font-size: @blog.SubChildMenuFontSize" class="block hover:bg-teal-900 text-gray-300 hover:text-white">@sub.MenuName</a>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                }
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+            <ul class="flex flex-col lg:flex-row">
+
+                @foreach (var item in MenuData.Where(x => x.ParentMenuId == 0).OrderBy(x => x.Position))
+                {
+                    <!--Hoverable Link-->
+                    <li class="hoverable hover:bg-teal-700 hover:text-white">
+                        <a href="/@item.PageUrl" style="color: @blog.MainMenuColor; font-family: @blog.MainMenuFontStyle; font-size: @blog.MainMenuFontSize" class="relative block py-6 px-4 lg:text-sm lg:text-base font-bold hover:bg-teal-700 hover:text-black">@item.MenuName</a>
+                        <div role="toggle" class="pt-3 mega-menu mb-16 sm:mb-0 shadow-xl bg-white">
+                            <div class="container w-full flex flex-column mx-2 pb-3">
+                                @foreach (var bin in MenuData.Where(x => x.ParentMenuId == item.MenuId).OrderBy(x => x.Position))
+                                {
+                                    <ul class="p-4 w-full sm:w-1/2 lg:w-1/6 pb-3">
+
+                                        <h3 style="color: @blog.SubMenuColor; font-family: @blog.SubMenuFontStyle; font-size: @blog.SubMenuFontSize" class="font-bold text-xl text-bold mb-2">@bin.MenuName</h3>
+
+                                        @foreach (var sub in MenuData.Where(x => x.ParentMenuId == bin.MenuId).OrderBy(x => x.Position))
+                                        {
+                                            <li>
+                                                <a href="@sub.PageUrl" style="color: @blog.SubChildMenuColor; font-family: @blog.SubChildFontStyle; font-size: @blog.SubChildMenuFontSize" class="block hover:bg-teal-900 text-gray-300 hover:text-white">@sub.MenuName</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+                        </div>
+                    </li>
+                    <!--end Hoverable Link-->
+                }
+            </ul>
+
+
+        </div>
+
+
+    </header>
+    <main>
+        <article>
+            @Body
+        </article>
+    </main>
+
+    <footer style="min-height:10vh;background-color:@blog.FooterBackgroundColor; color: @blog.FooterFontColor; font-family:@blog.FooterFontStyle">
+        <h2 id="footer-heading" class="sr-only">Footer</h2>
+        <div class="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
+            <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+                <div class="space-y-8">
+                    <img src="@blog.Logo"
+                         class="w-10 rounded-full object-cover mx-2" />
+                    @* <p class="text-sm leading-6 text-gray-600">Making the world a better place through constructing elegant hierarchies.</p> *@
+                    <div class="flex space-x-6">
+
+                        @if (!string.IsNullOrEmpty(blog.Facebook))
+                        {
+                            <a href="@blog.Facebook" target="_blank" class="cursor-pointer px-3">
+                                <i class="fab fa-facebook-square"></i>
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(blog.Twitter))
+                        {
+                            <a href="@blog.Twitter" target="_blank" class="cursor-pointer px-3">
+                                <i class="fab fa-twitter-square"></i>
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(blog.WhatsApp))
+                        {
+                            <a href="@blog.WhatsApp" target="_blank" class="cursor-pointer px-3">
+                                <i class="fab fa-whatsapp-square"></i>
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(blog.LinkedIn))
+                        {
+                            <a href="@blog.LinkedIn" target="_blank" class="cursor-pointer px-3">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(blog.Instagram))
+                        {
+                            <a href="@blog.Instagram" target="_blank" class="cursor-pointer px-3">
+                                <i class="fab fa-instagram-square"></i>
+                            </a>
+                        }
+                    </div>
+                </div>
+                <div class="mt-16 grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 xl:col-span-2 xl:mt-0">
+
+                    @foreach (var footer in footerLinks)
+                    {
+                        <div>
+                            <a href="@footer.Link" class="text-sm leading-6 text-gray-600 hover:text-gray-900">@footer.Name</a>
+                        </div>
+                    }
+
+
+
+
+
+
+                </div>
+            </div>
+            <div class="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 lg:mt-24">
+                <p class="text-xs leading-5 text-gray-500">    <p class="text-center pt-1"> @blog.FooterText </p></p>
+            </div>
+        </div>
+    </footer>
+
+</div>
+    </div>
+</main>
+@code {
+    [Parameter]
+    public string TenantId { get; set; }
+
+    private List<MenuItem> menuItems;
+
+    public class MenuItem
+    {
+        public string Text { get; }
+        public string Url { get; }
+        public List<MenuItem> SubMenu { get; }
+
+        public MenuItem(string text, string url, List<MenuItem> subMenu = null)
+        {
+            Text = text;
+            Url = url;
+            SubMenu = subMenu ?? new List<MenuItem>();
+        }
+    }
+
+    private bool toggleDark = false;
+    bool toggleHighContrast = false;
+    protected override async Task OnInitializedAsync()
+    {
+        sharedService.OnChange += StateHasChanged;
+        base.OnInitialized();
+        if (!(await LocalStorage.ContainKeyAsync("theme")))
+        {
+            await LocalStorage.SetItemAsStringAsync("theme", "light");
+        }
+        else
+        {
+            string theme = await LocalStorage.GetItemAsStringAsync("theme");
+
+            if (theme == "dark")
+            {
+                toggleDark = true;
+            }
+            if (theme == "high-contrast")
+            {
+                toggleHighContrast = true;
+            }
+            else
+            {
+                toggleDark = false;
+            }
+        }
+    }
+
+    private async Task ChangeThemeToDark()
+    {
+        string theme = await LocalStorage.GetItemAsStringAsync("theme");
+        await LocalStorage.SetItemAsStringAsync("theme", "dark");
+        toggleDark = true;
+        // if (theme == "dark")
+        // {
+        //     await LocalStorage.SetItemAsStringAsync("theme", "light");
+        // }
+        // else
+        // {
+        //     await LocalStorage.SetItemAsStringAsync("theme", "dark");
+        // }
+    }
+
+    private async Task ChangeThemeToLight()
+    {
+        string theme = await LocalStorage.GetItemAsStringAsync("theme");
+        await LocalStorage.SetItemAsStringAsync("theme", "light");
+        toggleHighContrast = false;
+        toggleDark = false;
+    }
+
+    private string GetFontSizeStyle()
+    {
+        return $@"
+        p {{ font-size: {sharedService.FontSize}px; }}
+        h2, h3, h4, h5, h6 {{ font-size: {sharedService.FontSizeHead}px; }}
+        h1{{font-size: {sharedService.FontSizeH1}px; }}
+        time {{font-size: {sharedService.FontSize}px;}}";
+        //return $"font-size: {sharedService.FontSize}px;";
+    }
+
+    private async Task AddContrastTheme()
+    {
+        string theme = await LocalStorage.GetItemAsStringAsync("theme");
+        await LocalStorage.SetItemAsStringAsync("theme", "high-contrast");
+        toggleDark = false;
+        toggleHighContrast = !toggleHighContrast;
+    }
+}

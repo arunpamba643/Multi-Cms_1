@@ -1,0 +1,158 @@
+﻿@page "/content/honor-details"
+@using Services
+@using Models
+@inject HonorSharedService HonorState
+
+<style>
+    /* DivTable.com */
+    .divTable {
+        display: table;
+        width: 100%;
+    }
+
+    .divTableRow {
+        display: table-row;
+    }
+
+    .divTableHeading {
+        background-color: #EEE;
+        display: table-header-group;
+    }
+
+    .divTableCell, .divTableHead {
+        border: 1px solid #999999;
+        display: table-cell;
+        padding: 3px 10px;
+    }
+
+    .divTableHeading {
+        background-color: #EEE;
+        display: table-header-group;
+        font-weight: bold;
+    }
+
+    .divTableFoot {
+        background-color: #EEE;
+        display: table-footer-group;
+        font-weight: bold;
+    }
+
+    .divTableBody {
+        display: table-row-group;
+    }
+</style>
+@code {
+    private Honoree selectedItem;
+
+    protected override void OnInitialized()
+    {
+        selectedItem = HonorState.honoree;
+    }
+}
+
+@if (selectedItem == null)
+{
+    <p>No honor selected.</p>
+}
+else
+{
+    <div class="container px-4 my-5 mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
+
+            <div class="text-center">
+                <img src="@selectedItem.AvatarImageUrl"
+                     class="w-[150px] mx-auto">
+            </div>
+
+            <div class="lg:col-span-2">
+
+                <div class="text-center lg:text-left">
+                    <h2 class="text-2xl font-bold">@selectedItem.Name</h2>
+                    <h6 class="mb-3 text-xl text-gray-700"> @selectedItem.Role | @selectedItem.Date</h6>
+                </div>
+
+                <div class="text-justify text-gray-600">
+
+                    <p>
+                        @selectedItem.Description
+                    </p>
+                   
+                </div>
+
+                <div class="mt-3">
+                    <div class="flex justify-between align-middle mb-4">
+                        <div>
+                            Team Lead
+                            <span class="text-gray-400 italic block text-sm">XYZ Company</span>
+                        </div>
+                        <span>2021-22</span>
+                    </div>
+
+                    <div class="flex justify-between align-middle mb-4">
+                        <div>
+                            Software Engineering
+                            <span class="text-gray-400 italic block text-sm">ABC Compancy</span>
+                        </div>
+                        <span>2020-21</span>
+                    </div>
+
+                   
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="d-none">
+        <!-- Profile Image -->
+        <div class="mt-2 p-0">
+            <div class="sm:grid-cols-1 md:grid-cols-2 grid gap-4 h-auto px-5 py-3 custom-row">
+                <div class="height-300">
+                    <div class="p-3 flex flex-col justify-center items-center w-100 rounded-2xl shadow-xl overflow-hidden">
+                        <img src="@selectedItem.AvatarImageUrl" class="contact-person-profile-image" />
+                        @*<h5 class="mt-3 font-bold text-lg"> @selectedItem.Name </h5>*@
+                        <div class="flex flex-wrap justify-center mt-2 ">
+                            <a class="mt-3 font-bold text-lg" href="/content/honor-details">
+                                <i class="fas fa-award"></i>
+                                @selectedItem.Name
+                            </a>
+                        </div>
+                        <p class="mt-1 text-sm mr-2">
+                            @selectedItem.Date
+                        </p>
+                        <div class="flex flex-wrap justify-center mt-2 ">
+                            <p class="mt-1 text-sm mr-2">
+
+                                @selectedItem.Role
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Description -->
+                <div class="description">
+                    <h5><b>Description:</b></h5>
+                    <p>@selectedItem.Description</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Roles Table -->
+        <div class="divTable">
+            <div class="divTableBody">
+                <div class="divTableRow">
+                    <div class="divTableCell"><b>Role</b></div>
+                    <div class="divTableCell"><b>Duration</b></div>
+                </div>
+                <div class="divTableRow">
+                    <div class="divTableCell">Team Lead</div>
+                    <div class="divTableCell">2012-2018</div>
+                </div>
+                <div class="divTableRow">
+                    <div class="divTableCell">Software Developer</div>
+                    <div class="divTableCell">2018- </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

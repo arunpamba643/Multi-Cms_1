@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-transform: capitalize;
+    text-decoration: none;
+}
+
+header {
+    height: 80px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    padding: 0px 24px 0px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+}
+
+.brand-logo {
+    height: 48px;
+    width: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .brand-logo img {
+        border-radius: 50%;
+    }
+
+header h1 {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+header .navbar ul {
+    list-style-type: none;
+}
+
+    header .navbar ul li {
+        position: relative;
+        float: left;
+    }
+
+        header .navbar ul li a {
+            font-size: 10px;
+            padding: 10px 5px;
+            color: #333;
+            display: block;
+        }
+
+            header .navbar ul li a:hover {
+                color: #F78F27;
+            }
+
+        header .navbar ul li ul {
+            position: absolute;
+            left: 0;
+            width: 100px;
+            background: #fff;
+            display: none;
+        }
+
+            header .navbar ul li ul li {
+                width: 100%;
+                border-top: 1px solid rgba(0,0,0,0.1);
+            }
+
+                header .navbar ul li ul li ul {
+                    left: 100px;
+                    top: 0;
+                }
+
+        header .navbar ul li:focus-within > ul,
+        header .navbar ul li:hover > ul {
+            display: initial;
+        }
+
+header label i {
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    display: none;
+}
+
+#menu-bar {
+    display: none;
+}
+
+@media(max-width: 992px) {
+    header {
+        padding: 20px;
+    }
+
+        header label i {
+            display: initial;
+        }
+
+        header .navbar {
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            display: none;
+        }
+
+            header .navbar ul li {
+                width: 100%;
+            }
+
+                header .navbar ul li ul {
+                    position: relative;
+                    width: 100%;
+                }
+
+                    header .navbar ul li ul li {
+                        background: #eee;
+                    }
+
+                        header .navbar ul li ul li ul {
+                            width: 100%;
+                            left: 0;
+                        }
+
+    #menu-bar:checked ~ .navbar {
+        display: initial
+    }
+}

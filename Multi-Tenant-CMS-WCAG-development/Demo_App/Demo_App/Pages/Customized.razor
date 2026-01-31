@@ -1,0 +1,509 @@
+﻿@inject IJSRuntime JSRuntime
+
+@page "/customize/{TenantId}/{BlogId?}"
+@using System.Text;
+<Breadcrumbs CrumbPaths="customize" />
+<PageTitle>Index</PageTitle>
+@if (blog.Banner != null)
+{
+    <div class="grid grid-cols-4 m-0">
+        <!-- Left side (1/4) -->
+        <div class="col-span-2 p-5 py-2" style="background-color:#f1f1f1" id="superClass">
+            <h4 class="text-2xl font-extrabold dark:text-white p-1">Header</h4>
+            <div class="w-full mt-1 flex justify-between items-center">
+                <label for="BackgroundColor" class="block text-gray-700 text-sm font-bold mb-2">Background Color:</label>
+                <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                    <input id="BackgroundColor" type="text" placeholder="Enter Backgroud Color" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="@blog.HeaderBackgroundColor" @oninput="updateHeaderColor" />
+                    <input id="colorPickerHeader" type="color" @oninput=@updateHeaderColor value="@blog.HeaderBackgroundColor" style="visibility: hidden;" />
+                    <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10" style="background-color:@blog.HeaderBackgroundColor">
+                        <i class="fa-solid fa-pen-to-square text-lg" @onclick="toShowHeaderColorPicker"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full mt-1 flex justify-between items-center">
+                <label for="brandName" class="block text-gray-700 text-sm font-bold mb-2">Brand Name:</label>
+                <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                    <input id="brandName" type="text" placeholder="Enter Brand Name" value="@blog.BrandName" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateBrandName" />
+                    <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10">
+                        <i class="fa-solid fa-pen-to-square text-lg"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full mt-1 flex justify-between items-center">
+                <label for="headerFontColor" class="block text-gray-700 text-sm font-bold mb-2">Header Font Color:</label>
+                <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                    <input id="headerFontColor" type="text" placeholder="Enter Backgroud Color" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="@blog.HeaderFontColor" @oninput="updateHeaderFontColor" />
+                    <input id="colorPickerHeaderFont" type="color" @oninput=@updateHeaderFontColor value="@blog.HeaderFontColor" style="visibility: hidden;" />
+                    <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10" style="background-color:@blog.HeaderFontColor">
+                        <i class="fa-solid fa-pen-to-square text-lg" @onclick="toShowHeaderFontColorPicker"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full mt-1 flex justify-between items-center">
+                <label for="Logo" class="block text-gray-700 text-sm font-bold mb-2">Logo:</label>
+                <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                    <input id="Logo" type="text" placeholder="Enter Logo Url" value="@blog.Logo" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateHeaderLogo" />
+                    <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10">
+                        <i class="fa-solid fa-pen-to-square text-lg"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full mt-1 flex justify-between items-center">
+                <label for="Logo" class="block text-gray-700 text-sm font-bold mb-2">Header Font Style:</label>
+                <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+
+                    <div class="w-1/5 justify-center items-center py-2 px-1 h-10">
+                        <select id="selectFont" @bind="@blog.HeaderFontStyle" oninput="@updateHeaderFontStyle">
+                            @foreach (var fontName in fontNames)
+                            {
+                                <option style="font-family:@fontName" value="@fontName">@fontName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr class="w-100 my-3" />
+
+            <div>
+                <h4 class="text-2xl font-extrabold dark:text-white p-1">Menu Management</h4>
+                <div class="w-full mt-1 flex justify-between items-center">
+                    <span style="width: 10%"></span>
+                    <span style="width: 40%; text-align: center" class="font-bold">Color</span>
+                    <span style="width: 20%; text-align: center" class="font-bold">Size<span>(px)</span></span>
+                    <span style="width: 30%; text-align: center" class="font-bold">Style</span>
+                </div>
+                <div class="w-full mt-1 flex justify-between items-center">
+                    <span style="width: 9%" class="font-bold">L1</span>
+                    <div class="flex items-center justify-between border p-0 h-10 bg-white" style="width: 38%">
+                        <input id="BackgroundColor" type="text" placeholder="Enter Backgroud Color" class="appearance-none w-4/5 py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="@blog.MainMenuColor" @oninput="upadteL1Color" />
+                        <input id="colorPicketL1" type="color" @oninput=@upadteL1Color value="@blog.MainMenuColor" style="visibility: hidden;width: 1%" />
+                        <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10" style="background-color:@blog.MainMenuColor">
+                            <i class="fa-solid fa-pen-to-square text-lg" @onclick="toShowL1ColorPicker"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between border p-0 h-10 bg-white" style="width: 20%">
+                        <input type="text" class="appearance-none w-4/5 py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="@blog.MainMenuFontSize" @oninput="upadteL1Size" />
+                        <div>
+                            <select id="selectFont" @bind="@selectedL1Size" oninput="@HandleMainMenuChange" class="py-2 px-1" style="width: 100%">
+                                @for (int i = 10; i <= 30; i += 2)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between border p-0 h-10 bg-white" style="width: 29%">
+                        <select id="selectFont" @bind="@blog.MainMenuFontStyle" oninput="@updateL1Style" style="width: 100%" class="py-2 px-3">
+                            @foreach (var fontName in fontNames)
+                            {
+                                <option style="font-family:@fontName" value="@fontName">@fontName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <!-- L2 -->
+                <div class="w-full mt-1 flex justify-between items-center">
+                    <span style="width: 9%" class="font-bold">L2</span>
+                    <div class="flex items-center justify-between border p-0 h-10 bg-white" style="width: 38%">
+                        <input id="BackgroundColor" type="text" placeholder="Enter Backgroud Color" class="appearance-none w-4/5 py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="@blog.SubMenuColor" @oninput="upadteL2Color" />
+                        <input id="colorPicketL2" type="color" @oninput=@upadteL2Color value="@blog.SubMenuColor" style="visibility: hidden;width: 1%" />
+                        <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10" style="background-color:@blog.SubMenuColor">
+                            <i class="fa-solid fa-pen-to-square text-lg" @onclick="toShowL2ColorPicker"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between border p-0 h-10 bg-white" style="width: 20%">
+                        <input type="text" class="appearance-none w-4/5 py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="@blog.SubMenuFontSize" @oninput="upadteL2Size" />
+                        <div>
+                            <select id="selectFont" @bind="@selectedL2Size" oninput="@upadteL2Size" class="py-2 px-1" style="width: 100%">
+                                @for (int i = 10; i <= 30; i += 2)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between border p-0 h-10 bg-white" style="width: 29%">
+                        <select id="selectFont" @bind="@blog.SubMenuFontStyle" oninput="@updateL2Style" style="width: 100%" class="py-2 px-3">
+                            @foreach (var fontName in fontNames)
+                            {
+                                <option style="font-family:@fontName" value="@fontName">@fontName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <!-- L3 -->
+                <div class="w-full mt-1 flex justify-between items-center">
+                    <span style="width: 9%" class="font-bold">L3</span>
+                    <div class="flex items-center justify-between border p-0 h-10 bg-white" style="width: 38%">
+                        <input id="BackgroundColor" type="text" placeholder="Enter Backgroud Color" class="appearance-none w-4/5 py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="@blog.SubChildMenuColor" @oninput="upadteL3Color" />
+                        <input id="colorPicketL3" type="color" @oninput=@upadteL3Color value="@blog.SubChildMenuColor" style="visibility: hidden;width: 1%" />
+                        <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10" style="background-color:@blog.SubChildMenuColor">
+                            <i class="fa-solid fa-pen-to-square text-lg" @onclick="toShowL3ColorPicker"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between border p-0 h-10 bg-white" style="width: 20%">
+
+                        <input type="text" class="appearance-none w-4/5 py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="@blog.SubChildMenuFontSize" @oninput="upadteL3Size" />
+                        <div>
+                            <select id="selectFont" @bind="@selectedL3Size" oninput="@upadteL3Size" class="py-2 px-1" style="width: 100%">
+                                @for (int i = 10; i <= 30; i += 2)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between border p-0 h-10 bg-white" style="width: 29%">
+                        <select id="selectFont" @bind="@blog.SubChildFontStyle" oninput="@updateL3Style" style="width: 100%" class="py-2 px-3">
+                            @foreach (var fontName in fontNames)
+                            {
+                                <option style="font-family:@fontName" value="@fontName">@fontName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr class="w-100 my-3" />
+
+
+            <h4 class="text-2xl font-extrabold dark:text-white p-1">Content</h4>
+
+            <div class="w-full mt-1 flex justify-between items-center">
+                <label for="banner" class="block text-gray-700 text-sm font-bold mb-2">Banner:</label>
+                <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                    <input id="banner" type="text" placeholder="Enter Banner Url" value="@blog.Banner" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateBanner" />
+                    <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10">
+                        <i class="fa-solid fa-pen-to-square text-lg"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full mt-1 flex justify-between items-center">
+                <label for="heading" class="block text-gray-700 text-sm font-bold mb-2" id="hi">Heading:</label>
+                <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                    <input id="heading" type="text" placeholder="Enter Heading" value="@blog.Heading" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateHeading">
+                    <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10">
+                        <i class="fa-solid fa-pen-to-square text-lg"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full mt-1 flex justify-between items-center">
+                <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content: </label>
+                <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                    <input id="content" type="text" placeholder="Enter Content" value="@blog.TextContent" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateBlogContent">
+                    <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10">
+                        <i class="fa-solid fa-pen-to-square text-lg"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full mt-1 flex justify-between items-center">
+                <label for="Logo" class="block text-gray-700 text-sm font-bold mb-2">Content Font Style:</label>
+                <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+
+                    <div class="w-1/5 justify-center items-center py-2 px-1 h-10">
+                        <select id="selectFont" @bind="@blog.ContentFontStyle" oninput="@updateContentFontStyle">
+                            @foreach (var fontName in fontNames)
+                            {
+                                <option style="font-family:@fontName" value="@fontName">@fontName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="w-full mt-1 flex justify-between items-center">
+                <label for="TextColor" class="block text-gray-700 text-sm font-bold mb-2">Text Color:</label>
+                <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                    <input id="TextColor" type="text" placeholder="Enter Text Color" value="@blog.ContentFontColor" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateContentColor">
+                    <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10" style="background-color:@blog.ContentFontColor">
+                        <input id="colorPickerContent" type="color" @oninput=@updateContentColor value="@blog.ContentFontColor" style="visibility: hidden;" />
+                        <i class="fa-solid fa-pen-to-square text-lg" @onclick="toShowContentColorPicker"></i>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="w-full mt-1 flex justify-between items-center">
+                <label for="Logo" class="block text-gray-700 text-sm font-bold mb-2">Font Size:</label>
+                <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                    <input id="Logo" type="text" placeholder="Enter Font Size" value="@blog.ContentFontSize" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateFontSize">
+
+                    <div>
+                        <select id="selectFont" @bind="selectedValue" oninput="@HandleSelectChange">
+                            @for (int i = 10; i <= 61; i += 2)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="w-full mt-1 flex justify-between items-center">
+                <label for="Logo" class="block text-gray-700 text-sm font-bold mb-2">Footer Text</label>
+                <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                    <input id="Logo" type="text" placeholder="Enter Footer Text" value="@blog.FooterText" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateFooterText">
+                    <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10">
+                        <i class="fa-solid fa-pen-to-square text-lg"></i>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="w-100 my-3" />
+
+            <h4 class="text-2xl font-extrabold dark:text-white p-1">Footer</h4>
+            <div>
+                <div class="w-full mt-1 flex justify-between items-center">
+                    <label for="FooterBackgroundColor" class="block text-gray-700 text-sm font-bold mb-2">Background Color:</label>
+                    <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                        <input id="FooterBackgroundColor" type="text" placeholder="Enter Background Color" value="@blog.FooterBackgroundColor" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateFooterColor">
+                        <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10" style="background-color:@blog.FooterBackgroundColor">
+                            <input id="colorPickerFooter" type="color" @oninput=@updateFooterColor value="@blog.FooterBackgroundColor" style="visibility: hidden;" />
+                            <i class="fa-solid fa-pen-to-square text-lg" @onclick="toShowFooterColorPicker"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full mt-1 flex justify-between items-center">
+                    <label for="Logo" class="block text-gray-700 text-sm font-bold mb-2">Footer Font Style:</label>
+                    <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+
+                        <div class="w-1/5 justify-center items-center py-2 px-1 h-10">
+                            <select id="selectFont" @bind="@blog.FooterFontStyle" oninput="@updateFooterFontStyle">
+                                @foreach (var fontName in fontNames)
+                                {
+                                    <option style="font-family:@fontName" value="@fontName">@fontName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="w-full mt-1 flex justify-between items-center">
+                    <label for="footerFontColor" class="block text-gray-700 text-sm font-bold mb-2">Footer Font Color:</label>
+                    <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                        <input id="footerFontColor" type="text" placeholder="Enter Backgroud Color" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="@blog.FooterFontColor" @oninput="updateFooterFontColor" />
+                        <input id="colorPickerFooterFont" type="color" @oninput=@updateFooterFontColor value="@blog.FooterFontColor" style="visibility: hidden;" />
+                        <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10" style="background-color:@blog.FooterFontColor">
+                            <i class="fa-solid fa-pen-to-square text-lg" @onclick="toShowFooterFontColorPicker"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full mt-1 flex justify-between items-center">
+                    <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Facebook: </label>
+                    <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                        <input id="content" type="text" placeholder="Enter Facebook Link" value="@blog.Facebook" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateFacebookLink">
+                        <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10">
+                            <i class="fa-solid fa-pen-to-square text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full mt-1 flex justify-between items-center">
+                    <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Twitter: </label>
+                    <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                        <input id="content" type="text" placeholder="Enter Twitter Link" value="@blog.Twitter" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateTwitterLink">
+                        <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10">
+                            <i class="fa-solid fa-pen-to-square text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full mt-1 flex justify-between items-center">
+                    <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Whatsapp: </label>
+                    <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                        <input id="content" type="text" placeholder="Enter WhatsApp Link" value="@blog.WhatsApp" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateWhatsappLink">
+                        <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10">
+                            <i class="fa-solid fa-pen-to-square text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full mt-1 flex justify-between items-center">
+                    <label for="content" class="block text-gray-700 text-sm font-bold mb-2">LinkedIn: </label>
+                    <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                        <input id="content" type="text" placeholder="Enter LinkedIn Link" value="@blog.LinkedIn" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateLinkedInLink">
+                        <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10">
+                            <i class="fa-solid fa-pen-to-square text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full mt-1 flex justify-between items-center">
+                    <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Instagram: </label>
+                    <div class="flex w-1/2 items-center justify-between border p-0 h-10 bg-white">
+                        <input id="content" type="text" placeholder="Enter Instagram Link" value="@blog.Instagram" class="appearance-none w-4/5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" @oninput="updateInstagramLink">
+                        <div class="w-1/5 flex justify-center items-center py-2 px-3 h-10">
+                            <i class="fa-solid fa-pen-to-square text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="bg-blue-500 text-white p-2 m-8 rounded w-auto relative" @onclick="toDisplay">
+                Publish
+                <div class="spinner absolute inset-0 hidden text-white">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </button>
+
+
+        </div>
+
+        <!-- Right side (3/4) -->
+        <div class="col-span-2 rounded">
+            <div class="m-4 rounded-lg shadow-lg border">
+               
+                <header style="background-color: @blog.HeaderBackgroundColor; font-family:@blog.HeaderFontStyle">
+
+                    <img src=@blog.Logo class="border w-16 h-16 rounded-full object-cover" />
+                    <h1 style="color: @blog.HeaderFontColor">@blog.BrandName</h1>
+                    <input type="checkbox" id="menu-bar" />
+                    <label for="menu-bar"><i class="fas fa-bars"></i></label>
+
+                    <nav class="navbar">
+                        <ul>
+                            @foreach (var item in MenuData.Where(x => x.ParentMenuId == 0).Take(2))
+                            {
+                                <li>
+
+                                    @if (MenuData.Where(x => x.ParentMenuId == item.MenuId).Count() > 0)
+                                    {
+                                        <a href="/@item.PageUrl" style="color: @blog.MainMenuColor; font-family: @blog.MainMenuFontStyle; font-size: @blog.MainMenuFontSize">
+                                            @item.MenuName<span class="mt-2">
+                                                <i class="fas fa-chevron-down" style="font-size:14px"></i>
+                                            </span>
+                                        </a>
+
+                                        <ul>
+                                            @foreach (var subItem in MenuData.Where(x => x.ParentMenuId == item.MenuId))
+                                            {
+                                                <li>
+
+                                                    @if (MenuData.Where(x => x.ParentMenuId == subItem.MenuId).Count() > 0)
+                                                    {
+                                                        <a href="#" style="color: @blog.SubMenuColor; font-family: @blog.SubMenuFontStyle; font-size: @blog.SubMenuFontSize">
+                                                            @subItem.MenuName
+                                                            <span class="mx-1">
+                                                                <i class="fas fa-chevron-right" style="font-size:14px"></i>
+                                                            </span>
+                                                        </a>
+                                                        <ul>
+                                                            @foreach (var subItem2 in MenuData.Where(x => x.ParentMenuId == subItem.MenuId))
+                                                            {
+                                                                <li>
+                                                                    <a href="@subItem2.PageUrl" style="color: @blog.SubChildMenuColor; font-family: @blog.SubChildFontStyle; font-size: @blog.SubChildMenuFontSize">@subItem2.MenuName</a>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="@subItem.PageUrl" style="color: @blog.SubMenuColor; font-family: @blog.SubMenuFontStyle; font-size: @blog.SubMenuFontSize">@subItem.MenuName</a>
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <a href="@item.PageUrl" style="color: @blog.MainMenuColor; font-family: @blog.MainMenuFontStyle; font-size: @blog.MainMenuFontSize">
+                                            @item.MenuName
+                                        </a>
+                                    }
+
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </header>
+                <div class="border w-full h-32" style="background-image:url(@blog.Banner);background-size:cover;">
+                </div>
+                <div class="border w-full h-10" style="font-family:@blog.ContentFontStyle">
+                    <h4 class="text-2xl font-extrabold dark:text-white m-1">@blog.Heading</h4>
+                </div>
+                <div class="w-auto overflow-auto  border-solid border border-blue-600 " id="content" style="color:@blog.ContentFontColor;font-size:@blog.ContentFontSize; font-family:@blog.ContentFontStyle">
+
+                    <p class="m-8">@blog.TextContent</p>
+
+                </div>
+
+                <div class="w-auto flex-column justify-center items-center py-2" id="footer" style="min-height:10vh;background-color:@blog.FooterBackgroundColor; color: @blog.FooterFontColor; font-family:@blog.FooterFontStyle">
+
+                    <div class="flex justify-center pb-1" >
+
+                        <a href="" class="cursor-pointer px-3">Imprint</a>
+
+                        <a href="" class="cursor-pointer px-3">Privacy</a>
+
+                        <a href="" class="cursor-pointer px-3">About</a>
+
+                    </div>
+
+                    <div class="flex justify-center" >
+
+                        @if (!string.IsNullOrEmpty(blog.Facebook))
+                        {
+                            <a href="@blog.Facebook" target="_blank" class="cursor-pointer px-3">
+                                <i class="fab fa-facebook-square"></i>
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(blog.Twitter))
+                        {
+                            <a href="@blog.Twitter" target="_blank" class="cursor-pointer px-3">
+                                <i class="fab fa-twitter-square"></i>
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(blog.WhatsApp))
+                        {
+                            <a href="@blog.WhatsApp" target="_blank" class="cursor-pointer px-3">
+                                <i class="fab fa-whatsapp-square"></i>
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(blog.LinkedIn))
+                        {
+                            <a href="@blog.LinkedIn" target="_blank" class="cursor-pointer px-3">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(blog.Instagram))
+                        {
+                            <a href="@blog.Instagram" target="_blank" class="cursor-pointer px-3">
+                                <i class="fab fa-instagram-square"></i>
+                            </a>
+                        }
+
+                    </div>
+
+                    <p class="text-center pt-1"> @blog.FooterText </p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <Spinner />
+}
+
+
+
+
+

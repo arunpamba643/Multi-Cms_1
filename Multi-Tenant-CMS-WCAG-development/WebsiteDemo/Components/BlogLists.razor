@@ -1,0 +1,33 @@
+﻿@using WebsiteDemo.Components
+@using WebsiteDemo.Models
+
+
+
+<div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+    @foreach (BlogPagesModel blogDetail in PaginatedList)
+    {
+
+        <div class="rounded-lg border border-gray-400 shadow">
+            <div class="">
+                <div style="height : 150px; width: 100%" class="flex h-52 justify-center overflow-hidden align-middle">
+                    <img src="@blogDetail.HeaderImage" />
+                </div>
+            </div>
+            <div class="my-2 px-2">
+                <h6 class="mt-2 line-clamp-2 font-bold">
+                    @blogDetail.Title
+                </h6>
+
+                <p class="mt-2 line-clamp-4 text-slate-600">
+                    @((MarkupString)blogDetail.Description)
+                </p>
+
+            </div>
+        </div>
+    }
+</div>
+
+
+
+<Pagination paginationModel="PaginationModel" PageChanged="LoadList" />

@@ -1,0 +1,65 @@
+﻿[
+  {
+    "$id": "22537",
+    "requestRequired": false,
+    "creator": {
+      "$id": "22538",
+      "id": "bbeee06d-8cae-447a-a511-01b5b089843c",
+      "name": "Skiverband Schwarzwald Nord e.V.",
+      "label": "association",
+      "avatarImageUrl": "",
+      "creatorClubPoint": {
+        "latitude": 48.123456,
+        "longitude": 8.765432
+      }
+    },
+    "pkey": "de_1",
+    "closed": false,
+    "filterRestrictionCount": 10,
+    "invitedCount": 0,
+    "disableParticipants": false,
+    "detailPageId": "",
+    "participantCount": 10,
+    "waitingCount": 0,
+    "description": "<p>25.04. - 29.04.2024</p>\r\n",
+    "eventType": "ausbildung",
+    "startTime": "2024-04-25T20:00:00+00:00",
+    "cancelledNote": "",
+    "endTime": "2024-04-29T13:00:00+00:00",
+    "withDrawalDeadlineTime": "2024-03-08T09:27:00+00:00",
+    "maxParticipating": 18,
+    "maxWaiting": 4,
+    "contractId": "e602e7dd-60e5-4aaa-afda-08dbb9ed6f6b",
+    "paymentRequired": true,
+    "addressAndIBANRequired": false,
+    "avatarImageUrl": "",
+    "headerImageUrl": "",
+    "addressRequired": true,
+    "ibanRequired": true,
+    "clubRequired": "required",
+    "createdAt": "2023-09-20T15:31:36+00:00",
+    "updatedAt": "1901-12-13T20:45:52+00:00",
+    "name": "2024 Modul 3 Ü30 Trainer C & B",
+    "seminarId": "ÜMod3-24",
+    "disabled": false,
+    "deleted": false,
+    "id": "ca22dd7c-ff78-462e-b3a9-23f64a00ddd7",
+    "startingPoint": {
+      "latitude": 47.876543,
+      "longitude": 9.345678
+    },
+    "tagElements": [ "tag1", "tag2", "tag3","tag4" ],
+    "divisions": [ "division1", "division2", "division3", "division4" ],
+    "disciplines": [ "discipline1", "discipline2", "discipline3", "discipline4" ],
+    "contactPersons": [ "person1", "person2", "person3", "person4" ],
+    "publicationCriteria": "Association",
+    "isCompetitiveSport": false,
+    "isPopularSport": false,
+    "hasReferee": false,
+    "publishStartTime": "1901-12-13T20:45:52+00:00",
+    "publishEndTime": "1901-12-13T20:45:52+00:00",
+    "chatEnabled": false,
+    "chatId": "a9222ca2735ad1aebef43d6a7cd2408c7820ddae828caac7e108976b5698bd6d"
+  }
+
+]

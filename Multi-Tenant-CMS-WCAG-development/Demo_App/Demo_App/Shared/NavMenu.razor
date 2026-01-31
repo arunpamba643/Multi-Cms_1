@@ -1,0 +1,119 @@
+﻿
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Demo_App</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="dashboard" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Dashboard
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubmenu= !expandSubmenu ">
+                <span class="oi oi-book" aria-hidden="true"></span>Home
+            </NavLink>
+            @if (expandSubmenu)
+            {
+                <ul class="nav flex-column" id="navitems">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="customize/11" Match=@NavLinkMatch.All>
+                            <span class="oi oi-file" aria-hidden="true"></span>CMS
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="PageList/11" Match=@NavLinkMatch.All>
+                            <span class="oi oi-file" aria-hidden="true"></span>Pages
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="FileManager/11" Match=@NavLinkMatch.All>
+                            <span class="oi oi-file" aria-hidden="true"></span>File Manager
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="Team" Match=@NavLinkMatch.All>
+                            <span class="oi oi-brush" aria-hidden="true"></span>Teams
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="CustomMenu/11" Match=@NavLinkMatch.All>
+                            <span class="oi oi-book" aria-hidden="true"></span>Menu
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="BlogPages/11" Match=@NavLinkMatch.All>
+                            <span class="oi oi-book" aria-hidden="true"></span>Blog Page
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="#" @onclick="()=>expandNextLevelSubmenu= !expandNextLevelSubmenu ">
+                            <span class="oi oi-home" aria-hidden="true"></span>News    
+                        </NavLink>
+                        @if (expandNextLevelSubmenu)
+                        {
+                            <ul class="nav flex-column" id="navitems">
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="recently" Match=@NavLinkMatch.All>
+                                        <span class="oi oi-file" aria-hidden="true"></span>Recently
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="sds" Match=@NavLinkMatch.All>
+                                        <span class="oi oi-brush" aria-hidden="true"></span>Past
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="sdsd" Match=@NavLinkMatch.All>
+                                        <span class="oi oi-home" aria-hidden="true"></span>Highlighted
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        }
+                    </li>
+
+                </ul>
+
+            }
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="fetchdata" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> FetchData
+            </NavLink>
+        </li>
+    </ul>
+
+    @*  <nav class="flex-column">
+    <div class="nav-item px-3">
+    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+    <span class="oi oi-home" aria-hidden="true"></span> Home
+    </NavLink>
+    </div>
+    <div class="nav-item px-3">
+    <NavLink class="nav-link" href="customize">
+    <span class="oi oi-list-rich" aria-hidden="true"></span>Customized
+    </NavLink>
+    </div>
+
+    </nav> *@
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse-a" : null;
+    private bool expandSubmenu = false;
+    private bool expandNextLevelSubmenu = false;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

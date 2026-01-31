@@ -1,0 +1,15 @@
+﻿@using Demo_App.Components
+@using Demo_App.Models
+
+@using AssociationEntities.CustomModels;
+
+<div class="text-center border p-3">
+
+    <p>There are only @ListItems.Count() record(s) with @String.Join(", ", EventFilters.DisciplinesIds), @String.Join(", ", EventFilters.DivisionsIds), @String.Join(", ", EventFilters.TagIds) filters  </p>
+
+    Tags: @(EventFilters.TagIds != null && EventFilters.TagIds.Any()) ? "No tag(s) was choosen " : BlogFilters.TagIds),
+    Divisions: @((EventFilters.DivisionsIds != null && EventFilters.DivisionsIds.Any())) ? "No division(s) was choosen " : BlogFilters.DivisionsIds),
+    Disciplines: @((EventFilters.DisciplinesIds != null && EventFilters.DisciplinesIds.Any())) ? "No discipline(s) was choosen " : BlogFilters.DisciplinesIds).
+</div>
+
+<Pagination PaginationModel="PaginationModel" PageChanged="LoadList" />

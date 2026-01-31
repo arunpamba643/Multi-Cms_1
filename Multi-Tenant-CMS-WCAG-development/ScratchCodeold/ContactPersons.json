@@ -1,0 +1,36 @@
+{
+  "$id": "4",
+  "items": [
+    {
+      "$id": "5",
+      "id": "dc6df972-2fee-4fbb-b403-d29d64fb7a6b",
+      "firstName": "local",
+      "lastName": "horst",
+      "avatarImageUrl": "",
+      "internAvatarImageUrl": "",
+      "externAvatarImageUrl": "",
+      "headerImageUrl": "",
+      "contactPersonTypes": []
+    },
+    {
+      "$id": "6",
+      "id": "00cd45ea-ffdb-41a4-8c1f-3e5a0d270211",
+      "firstName": "Micha",
+      "lastName": "Test",
+      "avatarImageUrl": "https://ccwp-service-img.azurewebsites.net/image/bb3b265a-6300-4644-afe6-b2f312d32a24/00cd45ea-ffdb-41a4-8c1f-3e5a0d270211/9495094c-f20e-427d-b32d-657d7ebc3272/original/avatar_3.png",
+      "internAvatarImageUrl": "https://ccwp-service-img.azurewebsites.net/image/bb3b265a-6300-4644-afe6-b2f312d32a24/00cd45ea-ffdb-41a4-8c1f-3e5a0d270211/c02572ac-e9d5-4b4d-88f0-496cdfd04093/original/avatar_4.png",
+      "externAvatarImageUrl": "https://ccwp-service-img.azurewebsites.net/image/bb3b265a-6300-4644-afe6-b2f312d32a24/00cd45ea-ffdb-41a4-8c1f-3e5a0d270211/8fc6688e-99f1-4d3d-b0c2-f1e705fe575b/original/avatar_1.png",
+      "headerImageUrl": "",
+      "contactPersonTypes": [
+        "ansprechpartner",
+        "leiteraufbau"
+      ]
+    }
+  ],
+  "page": 1,
+  "pagesize": 25,
+  "keyword": "",
+  "maximumcount": 2,
+  "orderbytype": "ascending",
+  "orderby": "Name"
+}

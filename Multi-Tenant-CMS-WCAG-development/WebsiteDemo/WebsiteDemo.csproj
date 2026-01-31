@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<Target Name="CheckNPMIsInstalled" BeforeTargets="InstallNPM">
+		<Exec Command="npm -v" ContinueOnError="true">
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+		</Exec>
+
+		<Error Condition="'$(ErrorCode)' != '0'" Text="You must install npm to run this task" />
+	</Target>
+
+	<Target Name="InstallNPM" BeforeTargets="BuildTailwindCSS">
+		<Exec Command="npm install" />
+		<Touch Files="$(NpmLastInstall)" AlwaysCreate="true" />
+	</Target>
+
+	<Target Name="BuildTailwindCSS" BeforeTargets="Compile">
+		<Exec Command="npm run buildcss:debug" Condition="'$(Configuration)' == 'Debug'" />
+		<Exec Command="npm run buildcss:release" Condition="'$(Configuration)' == 'Release'" />
+	</Target>
+
+
+	<ItemGroup>
+		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+		<PackageReference Include="Syncfusion.Blazor" Version="24.1.43" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AssociationEntities\AssociationEntities.csproj" />
+		<ProjectReference Include="..\AssociationTenantsBusiness\AssociationBusiness.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Data\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Exclude bin and obj folders -->
+		<Compile Remove="bin\**" />
+		<Compile Remove="obj\**" />
+		<Content Remove="bin\**" />
+		<Content Remove="obj\**" />
+		<EmbeddedResource Remove="bin\**" />
+		<EmbeddedResource Remove="obj\**" />
+		<None Remove="bin\**" />
+		<None Remove="obj\**" />
+	</ItemGroup>
+</Project>

@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\Db\**" />
+    <EmbeddedResource Remove="Models\Db\**" />
+    <None Remove="Models\Db\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+	<ItemGroup>
+		<!-- Exclude bin and obj folders -->
+		<Compile Remove="bin\**" />
+		<Compile Remove="obj\**" />
+		<Content Remove="bin\**" />
+		<Content Remove="obj\**" />
+		<EmbeddedResource Remove="bin\**" />
+		<EmbeddedResource Remove="obj\**" />
+		<None Remove="bin\**" />
+		<None Remove="obj\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Syncfusion.Blazor">
+	    <HintPath>..\SharedDLLs\Syncfusion.Blazor.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+</Project>

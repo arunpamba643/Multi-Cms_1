@@ -1,0 +1,91 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<NpmLastInstall>node_modules/./last-install</NpmLastInstall>
+	</PropertyGroup>
+
+
+	<Target Name="CheckNPMIsInstalled" BeforeTargets="InstallNPM">
+		<Exec Command="npm -v" ContinueOnError="true">
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+		</Exec>
+
+		<Error Condition="'$(ErrorCode)' != '0'" Text="You must install npm to run this task" />
+	</Target>
+
+	<Target Name="InstallNPM" BeforeTargets="BuildTailwindCSS">
+		<Exec Command="npm install" />
+		<Touch Files="$(NpmLastInstall)" AlwaysCreate="true" />
+	</Target>
+
+	<Target Name="BuildTailwindCSS" BeforeTargets="Compile">
+		<Exec Command="npm run buildcss:debug" Condition="'$(Configuration)' == 'Debug'" />
+		<Exec Command="npm run buildcss:release" Condition="'$(Configuration)' == 'Release'" />
+	</Target>
+
+	<ItemGroup>
+		<Compile Remove="Pages\Demo.cs" />
+		<Compile Remove="Pages\EditBlogPost.cshtml.cs" />
+		<Compile Remove="Services\BlogPage\IBlogService.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Remove="Components\FileSharing.razor" />
+		<Content Remove="Pages\ContentSection.razor" />
+		<Content Remove="Pages\ContentWithHeaderImage.razor" />
+		<Content Remove="Pages\ContentWithInlineImage.razor" />
+		<Content Remove="Pages\DefaultLayout.razor" />
+		<Content Remove="Pages\Demo.razor" />
+		<Content Remove="Pages\EditBlogPost.cshtml" />
+		<Content Remove="Pages\TeamsWithLargeImage.razor" />
+		<Content Remove="Pages\TeamWithRoundImage.razor" />
+		<Content Remove="wwwroot\css\styles.css" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<_ContentIncludedByDefault Remove="Components\FileSharing.razor" />
+		<_ContentIncludedByDefault Remove="Data\EventData.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+		<PackageReference Include="Syncfusion.Blazor" Version="28.1.41" />
+		<PackageReference Include="Syncfusion.Blazor.Themes" Version="28.1.41" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\AssociationEntities\AssociationEntities.csproj" />
+		<ProjectReference Include="..\..\AssociationTenantsBusiness\AssociationBusiness.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Exclude bin and obj folders -->
+		<Compile Remove="bin\**" />
+		<Compile Remove="obj\**" />
+		<Content Remove="bin\**" />
+		<Content Remove="obj\**" />
+		<EmbeddedResource Remove="bin\**" />
+		<EmbeddedResource Remove="obj\**" />
+		<None Remove="bin\**" />
+		<None Remove="obj\**" />
+	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="https://json.schemastore.org/libman.json" /></VisualStudio></ProjectExtensions>
+
+	<ItemGroup>
+	  <UpToDateCheckInput Remove="Components\FileSharing.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Components\FileSharing.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Update="Pages\FileManagerTest.razor">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  </Content>
+	</ItemGroup>
+</Project>

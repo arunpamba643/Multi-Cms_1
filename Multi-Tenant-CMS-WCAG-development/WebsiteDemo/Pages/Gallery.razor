@@ -1,0 +1,49 @@
+﻿@page "/image-gallery"
+@using Newtonsoft.Json
+@using WebsiteDemo.Models
+@inject NavigationManager NavigationManager
+
+@code {
+    private string[] imageUrls = Array.Empty<string>();
+    List<ImageData> urls = new List<ImageData>();
+    // private List<string> imageUrls = new List<string>();
+
+
+    protected override void OnInitialized()
+    {
+        // imageUrls.Add("https://res.cloudinary.com/dzax35hss/image/upload/v1707464247/samples/man-on-a-street.jpg");
+        // imageUrls.Add("https://res.cloudinary.com/dzax35hss/image/upload/v1707464247/samples/man-on-a-street.jpg");
+        // imageUrls.Add("https://res.cloudinary.com/dzax35hss/image/upload/v1707464247/samples/man-on-a-street.jpg");
+        // imageUrls.Add("https://res.cloudinary.com/dzax35hss/image/upload/v1707464247/samples/man-on-a-street.jpg");
+        // imageUrls.Add("https://res.cloudinary.com/dzax35hss/image/upload/v1707464247/samples/man-on-a-street.jpg");
+        // imageUrls.Add("https://res.cloudinary.com/dzax35hss/image/upload/v1707464247/samples/man-on-a-street.jpg");
+        // imageUrls.Add("https://res.cloudinary.com/dzax35hss/image/upload/v1707464247/samples/man-on-a-street.jpg");
+        // imageUrls.Add("https://res.cloudinary.com/dzax35hss/image/upload/v1707464247/samples/man-on-a-street.jpg");
+        var uri = new Uri(NavigationManager.Uri);
+        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("images", out var imagesString))
+        {
+            var decodedImagesString = Uri.UnescapeDataString(imagesString.ToString());
+            urls = JsonConvert.DeserializeObject<List<ImageData>>(decodedImagesString);
+            //imageUrls = decodedImagesString.Split(",");
+            //imageUrls = imagesString.ToString().Split(",");
+        }
+    }
+}
+
+<div class="p-4 grid grid-cols-4 gap-4">
+    @foreach (var url in urls)
+    {
+        <div class="flex justify-center overflow-hidden rounded-lg border border-b-slate-600 align-middle">
+            <img src="@url.ImageUrl" alt="Gallery Image" class="gallery-image" />
+        </div>
+    }
+</div>
+
+<style>
+    .gallery-image {
+        width: 90%;
+        height: auto;
+    }
+</style>

@@ -1,0 +1,200 @@
+﻿@page "/"
+@namespace WebsiteDemo.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link href="_content/Syncfusion.Blazor/styles/fabric.css"  rel= "stylesheet"/>
+@* <link href="_content/Syncfusion.Blazor.Themes/bootstrap5.css" rel="stylesheet" /> *@
+@* <script src="_content/Syncfusion.Blazor.Core/scripts/syncfusion-blazor.min.js" type="text/javascript"></script> *@
+<component type="typeof(App)" render-mode="Server" />
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const button = document.getElementById('navbar-toggle');
+        const menu = document.getElementById('navbar-dropdown');
+
+        const dropdownButton = document.getElementById('dropdownNavbarLink');
+        const dropdownMenu = document.getElementById('dropdownNavbar');
+
+        const doubleDropdownButton = document.getElementById('doubleDropdownButton');
+        const doubleDropdown = document.getElementById('doubleDropdown');
+
+        dropdownButton.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('hidden');
+        });
+
+        doubleDropdownButton.addEventListener('click', () => {
+            doubleDropdown.classList.toggle('hidden');
+        });
+
+        button.addEventListener('click', function () {
+            menu.classList.toggle('hidden');
+        });
+    });
+
+    function togglePopup() {
+        var popup = document.getElementById('mega-menu-dropdown');
+        if (popup.style.display === 'block') {
+            popup.style.display = 'none';
+        } else {
+            popup.style.display = 'block';
+        }
+    }
+
+    document.getElementById('mega-menu-dropdown-button').addEventListener('click',
+        togglePopup);
+</script>
+
+<script type="text/javascript">
+    // Array containing different ad sizes with width and height
+    var adSizes = [
+        { width: 970, height: 90 },
+        { width: 728, height: 90 },
+        { width: 320, height: 50 },
+        { width: 300, height: 250 },
+        { width: 336, height: 280 },
+        { width: 200, height: 200 },
+        { width: 160, height: 600 },
+        { width: 120, height: 600 },
+        { width: 300, height: 600 }
+    ];
+
+    // Array containing URLs of ad images
+    var ads = [
+        'https://res.cloudinary.com/dzax35hss/image/upload/v1715316743/5_pzyeln.png',
+        'https://res.cloudinary.com/dzax35hss/image/upload/v1715316743/4_btpdnq.png',
+        'https://res.cloudinary.com/dzax35hss/image/upload/v1715316743/3_vt5rlg.png',
+        'https://res.cloudinary.com/dzax35hss/image/upload/v1715316743/1_q7i3pg.png',
+        'https://res.cloudinary.com/dzax35hss/image/upload/v1715316743/2_kb08ra.png'
+    ];
+
+    // Function to insert ads into the HTML structure
+    function insertAds() {
+        // Get the width and height of the browser window
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+
+        // Variables to store the dimensions of the selected ad
+        var adWidth = "";
+        var adHeight = "";
+
+        // Loop through each ad size to find the appropriate size for the window width
+        for (var i = 0; i < adSizes.length; i++) {
+            var screenSize = adSizes[i];
+
+            // Check if the window width is greater than the current ad size width
+            if (width > screenSize.width) {
+                // Set the ad width and height
+                adWidth = screenSize.width + "px";
+                adHeight = screenSize.height + "px";
+                // Break the loop since we found the appropriate size
+                break;
+            }
+        }
+
+        // Get the row element where ads will be inserted
+        var row = document.querySelector('#rows');
+        // Get the children of the row element
+        var divs = row.children;
+
+        if (divs.length > 0) {
+
+
+
+            // Loop through the children and insert ads after every two divs
+            for (var i = 2; i < divs.length; i += 3) {
+                // Create a div element for the ad
+                var adDiv = document.createElement('div');
+                // Set classes and styles for the ad div
+                adDiv.className = 'my-3 mx-2 border flex items-center justify-center ad';
+
+                // Create an img element for the ad
+                var adImg = document.createElement('img');
+                // adding class for image tag
+                adImg.className = "img-fluid";
+                // Set the src attribute of the img element to a random ad URL from the ads array
+                adImg.src = ads[Math.floor(Math.random() * ads.length)];
+                adImg.style.maxWidth = '100%';
+                // Append the img element to the ad div
+                adDiv.appendChild(adImg);
+                // Insert the ad div after every two divs
+                row.insertBefore(adDiv, divs[i].nextSibling);
+            }
+
+            // Insert an ad at the start if there are existing child elements
+            if (divs.length > 0) {
+                // Create a div element for the ad at the start
+                var adDivStart = document.createElement('div');
+                // Set classes and styles for the ad div at the start
+                adDivStart.className = 'my-3 mx-2 border flex items-center justify-center ad';
+
+                // Create an img element for the ad at the start
+                var adImgStart = document.createElement('img');
+                // adding class for image tag
+                adImg.className = "img-fluid";
+                // Set the src attribute of the img element to a random ad URL from the ads array
+                adImgStart.src = ads[Math.floor(Math.random() * ads.length)];
+                adImgStart.style.maxWidth = '100%';
+                // Append the img element to the ad div at the start
+                adDivStart.appendChild(adImgStart);
+                // Insert the ad div at the start
+                row.insertBefore(adDivStart, divs[0]);
+            }
+        }
+    }
+
+
+    function adjustComponentHeight() {
+
+
+
+
+        // Select all rows within the parent container with the class "custom-row"
+        var customRow = document.querySelectorAll('.custom-row');
+
+        // Iterate through each row
+        customRow.forEach(function (row) {
+
+
+            // Select all components within the current row
+            var components = row.querySelectorAll('.component');
+            // Initialize a variable to store the maximum height
+            var maxHeight = 0;
+
+            // Find the maximum height among components within the row
+            components.forEach(function (component) {
+
+                // Get the height of the current component
+                var height = component.offsetHeight;
+                // Update the maxHeight if the height of the current component is greater
+                if (height > maxHeight) {
+                    maxHeight = height;
+                }
+            });
+
+
+            // If the maximum height is greater than 250px, set it to 250px
+            if (maxHeight > 250)
+                maxHeight = 250;
+
+
+            // Assign the maximum height to all components within the row
+            components.forEach(function (component) {
+
+                if (maxHeight > 0) {
+
+                    // Set the height of each component to the maxHeight
+                    component.style.height = maxHeight + "px";
+                    component.className = component.className + " overflow-hidden";
+                }
+            });
+        });
+
+
+    }
+
+
+
+</script>

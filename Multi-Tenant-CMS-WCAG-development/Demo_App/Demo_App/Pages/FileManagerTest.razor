@@ -1,0 +1,17 @@
+﻿@page "/FileManagerTest/{TenantId}"
+@using Syncfusion.Blazor.FileManager;
+<h3 class="mb-3">FileManager</h3>
+
+<div class="container my-5">
+    <SfFileManager TValue="FileManagerDirectoryContent" AllowDragAndDrop="false" AllowMultiSelection="false">
+        <FileManagerAjaxSettings Url="https://localhost:62869/api/FileManager/FileOperations"
+                                 UploadUrl="https://localhost:62869/api/FileManager/Upload"
+                                 DownloadUrl="https://localhost:62869/api/FileManager/Download"
+                                 GetImageUrl="http://localhost:62869/api/FileManager/GetImage">
+        </FileManagerAjaxSettings>
+        <FileManagerUploadSettings MaxFileSize="5000000" AllowedExtensions=".pdf,.doc,.docx,.txt,.xls,.xlsx,.jpeg,.jpg,.png"></FileManagerUploadSettings>
+        @* <FileManagerEvents></FileManagerEvents> *@
+    </SfFileManager>
+</div>
+
+

@@ -1,0 +1,46 @@
+  [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "phoneNumber": "+1234567890",
+      "emailAddress": "john@doe.com",
+      "avatarImageUrl": "https://example.com/images/johndoe.png"
+    },
+    {
+      "id": 2,
+      "name": "Alice Smith",
+      "phoneNumber": "+1987654321",
+      "emailAddress": "alice@smith.com",
+      "avatarImageUrl": "https://example.com/images/alicesmith.png"
+    },
+    {
+      "id": 3,
+      "name": "Bob Johnson",
+      "phoneNumber": "+9876543210",
+      "emailAddress": "bob@johnson.com",
+      "avatarImageUrl": "https://example.com/images/bobjohnson.png"
+    },
+    {
+      "id": 4,
+      "name": "Emily Brown",
+      "phoneNumber": "+1098765432",
+      "emailAddress": "emily@brown.com",
+      "avatarImageUrl": "https://example.com/images/emilybrown.png"
+    },
+    {
+      "id": 5,
+      "name": "David Wilson",
+      "phoneNumber": "+1230987654",
+      "emailAddress": "david@wilson.com",
+      "avatarImageUrl": "https://example.com/images/davidwilson.png"
+    },
+    {
+      "id": 6,
+      "name": "Sarah Martinez",
+      "phoneNumber": "+5678901234",
+      "emailAddress": "sarah@martinez.com",
+      "avatarImageUrl": "https://example.com/images/sarahmartinez.png"
+    }
+  ]
+
+

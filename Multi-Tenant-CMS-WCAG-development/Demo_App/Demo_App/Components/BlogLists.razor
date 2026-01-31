@@ -1,0 +1,20 @@
+﻿@using Demo_App.Components
+@using Demo_App.Models
+
+
+<div class="text-center border p-3">
+    <p>
+        There are @ListItems.Count() record(s)
+        with
+        filters
+
+        Tags: @((String.IsNullOrEmpty(BlogFilters.TagIds)) ? "No tag(s) was choosen " : BlogFilters.TagIds),
+        Divisions: @((String.IsNullOrEmpty(BlogFilters.DivisionsIds)) ? "No division(s) was choosen " : BlogFilters.DivisionsIds),
+        Disciplines: @((String.IsNullOrEmpty(BlogFilters.DisciplinesIds)) ? "No discipline(s) was choosen " : BlogFilters.DisciplinesIds).
+
+
+    </p>
+</div>
+
+
+

@@ -1,0 +1,133 @@
+﻿@inject IJSRuntime JSRuntime
+
+@page "/CustomMenu/{TenantId}"
+@using AssociationEntities.Models
+@using AssociationEntities.Models.Api;
+@using Demo_App.Services.Pages
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
+@using Microsoft.AspNetCore.Components.RenderTree
+@* @inject PageService pageService *@
+
+
+
+<Breadcrumbs CrumbPaths="CustomMenu" />
+
+@if (isSpinnerLoad)
+{
+    <div class="">
+
+        <div class="container mx-auto flex justify-between">
+            <h4 class="text-2xl font-extrabold dark:text-white p-1">Menu</h4>
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <p style="color:red">@ErrorMessage</p>
+            }
+            <button class="bg-success btn text-light mx-3" @onclick="ShowCreateandUpdatePopup">Add Menu</button>
+        </div>
+
+        <div id="treeview">
+            <SfTreeView TValue="MenuDragDropModel" AllowDragAndDrop="true" @bind-SelectedNodes="@selectedNodes">
+                <TreeViewFieldsSettings TValue="MenuDragDropModel" Id="Id" Text="Name" Child="Children" DataSource="@dragDropListModel">
+
+                </TreeViewFieldsSettings>
+                <TreeViewEvents TValue="MenuDragDropModel" OnNodeDragged="OnNodeDragging" OnNodeDragStop="OnNodeDragStop" NodeClicked="nodeClicked" NodeEdited="NodeEdited">
+
+                </TreeViewEvents>
+
+                <SfContextMenu TValue="MenuItem" @ref="@menu" Target="#treeview">
+                    <MenuItems>
+                        <MenuItem Text="Edit" id="Id" IconCss="e-icons e-edit" class="Edit"></MenuItem>
+                        <MenuItem Text="Remove" id="Id" IconCss="e-icons e-circle-remove" class="delete"></MenuItem>
+                    </MenuItems>
+                    <MenuEvents TValue="MenuItem" ItemSelected="@MenuSelect"></MenuEvents>
+                </SfContextMenu>
+            </SfTreeView>
+        </div>
+    </div>
+
+
+
+}
+else
+{
+    <Spinner />
+}
+
+@if (IsDataVisible)
+{
+
+    <div class="fixed inset-0 overflow-y-auto" style="top: -430px; margin: auto;  position: absolute; width:490px;">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full p-3">
+
+                <div class="grid gap-2">
+                    <div class="flex justify-between border-bottom pb-3">
+                        <h6 class="font-bold">Add/Update Menu</h6>
+                        <a class="cursor-pointer" @onclick="CloseCreateandUpdatePopup">
+                            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    <div>
+
+                        <EditForm Model="formData" OnValidSubmit="HandleValidSubmit">
+                            <DataAnnotationsValidator />
+
+                            <div class="">
+                                <label for="menuName" class="block mb-2 text-sm font-medium text-gray-900">Menu Name</label>
+                                <InputText id="menuName" @bind-Value="formData.MenuName" class="mb-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " />
+                                <small>
+                                    <ValidationMessage For="@(() => formData.MenuName)" />
+                                </small>
+                            </div>
+
+                            <div class="">
+                                <label for="menuURL" class="block mb-2 text-sm font-medium text-gray-900">URL</label>
+
+                                <select id="menuName" @bind="formData.PageId" @oninput="CheckIfMenuMapped" class="mb-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                                    <option selected value="0">Please select</option>
+                                    @foreach (var controlPage in controlPages)
+                                    {
+                                        <option value="@controlPage.Id">@controlPage.PageTitle ( @controlPage.ResourcePath ) </option>
+                                    }
+                                </select>
+                            </div>
+
+                            @if (IsMenuMapped)
+                            {
+
+                                <div>
+                                    The current choosen menu item @formData.MenuName already mapped to @existedPage.PageTitle. Proceeding further will change @existedPage.PageTitle scope to draft.
+                                </div>
+                            }
+
+                            <div class="flex justify-end py-3 mt-3 border-top">
+                                <button type="submit" class="bg-primary text-light btn">Save</button>
+                                <button class="bg-secondary text-light btn ml-2" @onclick="CloseCreateandUpdatePopup">Cancel</button>
+                            </div>
+
+                        </EditForm>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+    RenderFragment<MenuDragDropModel> TreeItemTemplate = (item) => @<text>@item.Name</text>;
+}
+
+
+

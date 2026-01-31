@@ -1,0 +1,65 @@
+﻿@page "/Team/{TenantId}"
+
+<div class="h-screen w-full" id="nextWindow1">
+    <div class="flex flex-col" style="min-height:100vh">
+        <div class="w-auto flex justify-between items-center p-1" id="Header" style="height:15vh;background-color:@blog.HeaderBackgroundColor">
+            <div class="w-1/4 flex  items-center">
+                <img src=@blog.Logo class="w-16 h-16 rounded-full object-cover mx-2" />
+                <h2 class="px-1 block text-gray-700 text-xxl font-bold mx-2">@blog.BrandName</h2>
+            </div>
+            <div class="flex justify-around w-1/4" style="font-size:14px; color: @blog.HeaderFontColor">
+                @foreach (var item in MenuData)
+                {
+                    <a href="/@item.PageUrl/@tenantId">@item.MenuName</a>
+                }
+
+            </div>
+        </div>
+        <div id="home" style="display:block;" class="flex-grow">
+            <h4 class="text-2xl font-extrabold dark:text-white mx-8 my-1">Teams</h4>
+            <div class="grid @GridClass gap-4 h-auto" id="container" style="min-height:20vh">
+                @foreach (var div in teamsData)
+                {
+                    <div class="p-1 rounded">
+                        @if (!string.IsNullOrEmpty(div.Image))
+                        {
+                            <img src="@div.Image" class="w-full" />
+
+                            <p>@div.Text</p>
+                        }
+                        else
+                        {
+                            <p>@div.Image</p>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        <div id="about" style="display:none" class="flex-grow">
+            <div class="w-full">
+                <img class="w-full" style="height:250px" src="{Banner}" />
+            </div>
+            <div class="w-full" style="height:10vh;">
+                <h4 class="text-2xl font-extrabold dark:text-white mx-8 my-1">ABOUT</h4>
+            </div>
+
+        </div>
+        <div id="teams" style="display:none" class="flex-grow">
+            <div class="w-full">
+                <img class="w-full" style="height:250px" src="{Banner}" />
+            </div>
+            <div class="w-full" style="height:10vh;">
+                <h4 class="text-2xl font-extrabold dark:text-white mx-8 my-1">Teams</h4>
+            </div>
+
+        </div>
+
+        <div class="w-full flex justify-center items-center" id="footer" style="height:10vh;background-color:@blog.FooterBackgroundColor">
+            <p style="color: white;">@blog.FooterText </p>
+        </div>
+
+    </div>
+</div>
+
+
+

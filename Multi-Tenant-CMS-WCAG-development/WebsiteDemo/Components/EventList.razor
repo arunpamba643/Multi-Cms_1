@@ -1,0 +1,33 @@
+﻿@using WebsiteDemo.Components
+@using WebsiteDemo.Models
+
+@using AssociationEntities.CustomModels;
+
+
+
+<table class="table dark:text-white">
+    <thead>
+        <tr>
+            <th><h5>Event name</h5></th>
+            <th><h5>Event Type</h5></th>
+            <th><h5>Event Creator</h5></th>
+            <th><h5>Event Start Time</h5></th>
+            @* <th>Event Description</th> *@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (AssociationEntities.CustomModels.EventModel eventDetail in PaginatedList)
+        {
+            <tr>
+                <td><p>@eventDetail.Name</p></td>
+                <td><p>@eventDetail.EventType</p></td>
+                <td><p>@eventDetail.Creator.Name</p></td>
+                <td><p>@eventDetail.StartTime.ToString("MM/dd/yyyy")</p></td>
+                @* <td>@eventDetail.EventDescription.Substring(0,20)</td> *@
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<Pagination paginationModel="PaginationModel" PageChanged="LoadList" />

@@ -1,0 +1,773 @@
+{
+  "$id": "1",
+  "queryParameters": {
+    "$id": "2",
+    "tenantIds": []
+  },
+  "items": [
+    {
+      "$id": "3",
+      "title": "string",
+      "scopeType": "intern",
+      "templateId": "string",
+      "detailItemId": "string",
+      "tags": [],
+      "tenantId": "00000000-0000-0000-0000-000000000000",
+      "components": [],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "",
+      "images": [],
+      "id": "c9937b23-b99f-4088-9686-d803e8a9e274"
+    },
+    {
+      "$id": "4",
+      "title": "Mit dem Auto um die Welt",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "5",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "6",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "7",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/mit-dem-auto-um-die-welt",
+      "images": [],
+      "id": "c5dd7957-1d26-4487-891d-55522df503de"
+    },
+    {
+      "$id": "8",
+      "title": "noch-eine-neue-eins",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "9",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "10",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "11",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/noch-eine-neue-eins",
+      "images": [],
+      "id": "cd1eebf5-2066-49ce-b2e6-66a4630204a8"
+    },
+    {
+      "$id": "12",
+      "title": "Cycling",
+      "scopeType": "intern",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "bb3b265a-6300-4644-afe6-b2f312d32a24",
+      "components": [
+        {
+          "$id": "13",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "14",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "15",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "0001-01-01T00:54:00+00:54",
+      "validFrom": "0001-01-01T00:54:00+00:54",
+      "link": "/cycling",
+      "images": [],
+      "id": "231b3057-2924-43e9-a70e-3bfd65e38efb"
+    },
+    {
+      "$id": "16",
+      "title": "nocheinnullabletest",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "17",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "18",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "19",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/nocheinnullabletest",
+      "images": [],
+      "id": "87bc696a-4c60-49f2-81fb-5b53d94af872"
+    },
+    {
+      "$id": "20",
+      "title": "Überschrift asdasd",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "21",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "22",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "23",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/berschrift-asdasd",
+      "images": [],
+      "id": "4cb789d6-4caa-4af8-aecc-07815237c923"
+    },
+    {
+      "$id": "24",
+      "title": "nocheinnullabletest",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "25",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "26",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "27",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/nocheinnullabletest",
+      "images": [],
+      "id": "216546fb-5ef3-49a3-93a3-e6c7d6e29026"
+    },
+    {
+      "$id": "28",
+      "title": "Ohne Bild",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "29",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "30",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "31",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/ohne-bild",
+      "images": [],
+      "id": "28eb9fcb-38f8-4406-bafa-201578c278e6"
+    },
+    {
+      "$id": "32",
+      "title": "nocheinnullabletest",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "33",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "34",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "35",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/nocheinnullabletest",
+      "images": [],
+      "id": "c585160a-7b98-4241-adfd-fec0030a7802"
+    },
+    {
+      "$id": "36",
+      "title": "Mittagsangebote",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "37",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "38",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "39",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/mittagsangebote",
+      "images": [],
+      "id": "db1ef868-df32-4d2c-9e50-3f2612dd62e5"
+    },
+    {
+      "$id": "40",
+      "title": "Radfahren hält jung",
+      "scopeType": "intern",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "e2e69d52-be06-455d-9102-a18e342b98ad",
+      "components": [
+        {
+          "$id": "41",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "42",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "43",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "0001-01-01T00:54:00+00:54",
+      "validFrom": "0001-01-01T00:54:00+00:54",
+      "link": "/radfahren-hlt-jung",
+      "images": [],
+      "id": "7ce52479-ad40-4bdd-bd5e-594c01ca6c6e"
+    },
+    {
+      "$id": "44",
+      "title": "nocheinnullabletest",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "45",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "46",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "47",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/nocheinnullabletest",
+      "images": [],
+      "id": "28e65280-a669-436f-b994-43889e27e38b"
+    },
+    {
+      "$id": "48",
+      "title": "Neuer Artikel",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "49",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "50",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "51",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/neuer-artikel",
+      "images": [],
+      "id": "d1976db5-586b-40e5-b35d-8b3d8261c640"
+    },
+    {
+      "$id": "52",
+      "title": "Schattenspiele 2.0",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "53",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "54",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "55",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/schattenspiele-20",
+      "images": [],
+      "id": "037274b6-1aba-4644-a9e9-2387ccd97ac5"
+    },
+    {
+      "$id": "56",
+      "title": "Hinter den 7 Bergen",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "57",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "58",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "59",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/hinter-den-7-bergen",
+      "images": [],
+      "id": "47c60928-e774-40aa-ab55-67b86b1babb2"
+    },
+    {
+      "$id": "60",
+      "title": "a1",
+      "scopeType": "intern",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "61",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "62",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "63",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "0001-01-01T00:54:00+00:54",
+      "validFrom": "0001-01-01T00:54:00+00:54",
+      "link": "/a1",
+      "images": [],
+      "id": "1b9e1c69-8b69-46f4-9f49-700f4a4677cf"
+    },
+    {
+      "$id": "64",
+      "title": "\"Rund um den See\" war ein großer Erfolg",
+      "scopeType": "intern",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "e2e69d52-be06-455d-9102-a18e342b98ad",
+      "components": [
+        {
+          "$id": "65",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "66",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "67",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "0001-01-01T00:54:00+00:54",
+      "validFrom": "0001-01-01T00:54:00+00:54",
+      "link": "/rund-um-den-see-war-ein-groer-erfolg",
+      "images": [],
+      "id": "79e4784f-dd7e-4bc6-b61d-51bd9b83a465"
+    },
+    {
+      "$id": "68",
+      "title": "Rembrandt",
+      "scopeType": "intern",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "69",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "70",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "71",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "0001-01-01T00:54:00+00:54",
+      "validFrom": "0001-01-01T00:54:00+00:54",
+      "link": "/rembrandt",
+      "images": [],
+      "id": "a8be9728-6c69-482a-a84a-3a2be376f2d5"
+    },
+    {
+      "$id": "72",
+      "title": "Tablet und Stift",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "73",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "74",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "75",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/tablet-und-stift",
+      "images": [],
+      "id": "58f7a805-fa7c-4a95-9c2a-7a9ea2f14f5e"
+    },
+    {
+      "$id": "76",
+      "title": "nocheinnullabletest",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "77",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "78",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "79",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/nocheinnullabletest",
+      "images": [],
+      "id": "537963b4-a1e1-488c-9a13-feaaf8c8a386"
+    },
+    {
+      "$id": "80",
+      "title": "Das ist ein wirklich langer Titel der auf jeden Fall zu viel Platz beansprucht",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "81",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "82",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "83",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/das-ist-ein-wirklich-langer-titel-der-auf-jeden-fall-zu-viel-platz-beansprucht",
+      "images": [],
+      "id": "2d2610c5-bea2-4c95-af03-5a2f37348b33"
+    },
+    {
+      "$id": "84",
+      "title": "erster",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "85",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "86",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "87",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/erster",
+      "images": [],
+      "id": "0a83d4d3-2f5b-40bd-978c-58b1aa9b9631"
+    },
+    {
+      "$id": "88",
+      "title": "Basket Ball",
+      "scopeType": "intern",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "bb3b265a-6300-4644-afe6-b2f312d32a24",
+      "components": [
+        {
+          "$id": "89",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "90",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "91",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "0001-01-01T00:54:00+00:54",
+      "validFrom": "0001-01-01T00:54:00+00:54",
+      "link": "/basket-ball",
+      "images": [],
+      "id": "81bc268b-ce59-4da9-8b9a-ba1667162710"
+    },
+    {
+      "$id": "92",
+      "title": "neuertestedit",
+      "scopeType": "adminonly",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "bb3b265a-6300-4644-afe6-b2f312d32a24",
+      "components": [
+        {
+          "$id": "93",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "94",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "95",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "2038-01-19T04:14:06+01:00",
+      "validFrom": "1901-12-13T21:45:54+01:00",
+      "link": "/neuertest",
+      "images": [],
+      "id": "c786c64d-65d2-40e1-827c-f57649b57162"
+    },
+    {
+      "$id": "96",
+      "title": "bild dummy",
+      "scopeType": "intern",
+      "templateId": "4bbd49ac-d4e3-4c11-a42d-6f1bc767921a",
+      "detailItemId": "",
+      "tags": [],
+      "tenantId": "5dbed248-e434-4a32-8334-2a4902fde85d",
+      "components": [
+        {
+          "$id": "97",
+          "componentType": "image",
+          "componentTemplateId": "3caec37c-4840-4f26-b251-8448b1b35731"
+        },
+        {
+          "$id": "98",
+          "componentType": "text",
+          "componentTemplateId": "def3fa93-26b4-4101-8ae0-f1da3b7433cd"
+        },
+        {
+          "$id": "99",
+          "componentType": "youtubevideo",
+          "componentTemplateId": "f10eff44-6bfe-4c62-afb5-61217a32d6f1"
+        }
+      ],
+      "validUntil": "0001-01-01T00:54:00+00:54",
+      "validFrom": "0001-01-01T00:54:00+00:54",
+      "link": "/bild-dummy",
+      "images": [],
+      "id": "cdc2ca14-9737-421c-8b64-0b49663a3758"
+    }
+  ],
+  "page": 1,
+  "pagesize": 25,
+  "searchfields": "",
+  "maximumcount": 58,
+  "orderbytype": "ascending"
+}
